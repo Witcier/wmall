@@ -14,5 +14,5 @@
 
 Route::get('/','PagesController@index')->name('index');
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
