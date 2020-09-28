@@ -20,7 +20,7 @@ class ProductsController extends AdminController
         return Grid::make(new Product(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('title');
-            $grid->file('image');
+            $grid->picture()->image();
             $grid->column('status')->display(function ($value) {
                 return $value ? '是' : '否';
             });
@@ -40,12 +40,19 @@ class ProductsController extends AdminController
                 $actions->disableView();
                 $actions->disableDelete();
             });
-            
+
             $grid->tools(function ($tools) {
                 // 禁用批量删除按钮
                 $tools->batch(function ($batch) {
                     $batch->disableDelete();
                 });
+            });
+
+            $grid->toolsWithOutline(false);
+            
+            $grid->filter(function (Grid\Filter $filter) {
+                // 更改为 panel 布局
+                $filter->panel();
             });
         });
     }
@@ -81,19 +88,22 @@ class ProductsController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new Product(), function (Form $form) {
+        return Form::make(new Product('skus'), function (Form $form) {
             $form->display('id');
-            $form->text('title');
-            $form->text('description');
-            $form->text('image');
-            $form->text('status');
-            $form->text('rating');
-            $form->text('sold_count');
-            $form->text('review_count');
-            $form->text('price');
-        
-            $form->display('created_at');
-            $form->display('updated_at');
+            $form->text('title')->rules('required');
+            $form->image('image')->rules('required|image');
+            $form->editor('description')->rules('required');
+            $form->radio('status')->options(['1' => '是','0' => '否'])->default(0);
+            $form->hasMany('skus','商品规格表',function (Form\NestedForm $form) {
+                $form->text('title','规格标题')->rules('required');
+                $form->text('description')->rules('required');
+                $form->text('price')->rules('required|numeric|min:0.01');
+                $form->text('stock','库存')->rules('required|integer|min:0');
+            });
+
+            $form->saving(function (Form $form) {
+                $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ?: 0; 
+            });
         });
     }
 }
