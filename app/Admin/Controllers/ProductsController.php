@@ -20,10 +20,13 @@ class ProductsController extends AdminController
         return Grid::make(new Product(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('title');
-            $grid->picture()->image();
+            $grid->image()->image('',80,80);
             $grid->column('status')->display(function ($value) {
                 return $value ? '是' : '否';
-            });
+            })->label([
+                1 => 'success',
+                0 => 'danger',
+            ]);
             $grid->column('rating')->sortable();
             $grid->column('sold_count')->sortable();
             $grid->column('review_count')->sortable();
@@ -38,7 +41,6 @@ class ProductsController extends AdminController
 
             $grid->actions(function ($actions) {
                 $actions->disableView();
-                $actions->disableDelete();
             });
 
             $grid->tools(function ($tools) {

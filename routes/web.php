@@ -13,7 +13,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'PagesController@index')->name('index');
+Route::redirect('/', '/products')->name('index');
+Route::get('products','ProductsController@index')->name('products.index');
 
 Auth::routes();
 
