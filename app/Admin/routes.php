@@ -17,4 +17,7 @@ Route::group([
     //用户管理
     $router->resource('users','UsersController');
 
+    //商品管理
+    $router->resource('products','ProductsController');
+
 });
