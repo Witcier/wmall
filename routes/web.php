@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/products')->name('index');
 //商品模块
 Route::get('products','ProductsController@index')->name('products.index');
-Route::get('products/{product}','ProductsController@show')->name('products,show');
+Route::get('products/{product}','ProductsController@show')->name('products.show');
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['auth','verified']], function () {
     //收货地址模块
