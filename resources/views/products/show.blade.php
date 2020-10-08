@@ -25,7 +25,7 @@
               <label 
                class="btn sku-btn"
                data-price="{{ $sku->price }}"
-               data-stock="{{ $sku->price }}"
+               data-stock="{{ $sku->stock }}"
                data-toggle="tooltip"
                title="{{ $sku->description }}" 
                data-placement="bottom">
@@ -76,6 +76,7 @@
     $('.sku-btn').click(function () {
       $('.product-info .price span').text($(this).data('price'));
       $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
+      console.log($(this).data('stock'));
     });
 
     // 监听收藏按钮的点击事件
