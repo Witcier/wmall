@@ -6,19 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    protected $fillable = [
-        'amount',
-        'price',
-        'rating',
-        'review',
-        'reviewed_at'
-    ];
-
-    protected $dates = [
-        'reviewed_at',
-    ];
-
-    protected $timestamps = false;
+    protected $fillable = ['amount', 'price', 'rating', 'review', 'reviewed_at'];
+    protected $dates = ['reviewed_at'];
+    public $timestamps = false;
 
     public function product()
     {

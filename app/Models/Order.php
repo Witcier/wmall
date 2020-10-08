@@ -47,7 +47,7 @@ class Order extends Model
         'extra',
     ];
 
-    protected $cates = [
+    protected $casts = [
         'closed' => 'bollean',
         'reviewed' => 'bollean',
         'address' => 'json',
@@ -59,7 +59,7 @@ class Order extends Model
         'paid_at',
     ];
 
-    public static function boot()
+    protected static function boot()
     {
         parent::boot();
         // 监听模型创建事件，在写入数据库之前触发
@@ -86,7 +86,7 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function findAvailableNo()
+    public static function findAvailableNo()
     {
         $prefix = 'WE'.date('YmdHis');
         for ($i=0; $i < 10; $i++) { 
