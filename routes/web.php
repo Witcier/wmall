@@ -14,14 +14,14 @@
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/products')->name('index');
-//商品模块
+// 商城主页
 Route::get('products','ProductsController@index')->name('products.index');
 
 
 Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => ['auth','verified']], function () {
-    //收货地址模块
+    // 收货地址模块
     Route::get('user_addresses', 'UserAddressesController@index')->name('user_addresses.index');
     Route::get('user_addresses/create', 'UserAddressesController@create')->name('user_addresses.create');
     Route::post('user_addresses', 'UserAddressesController@store')->name('user_addresses.store');
@@ -29,24 +29,31 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::put('user_addresses/{user_address}', 'UserAddressesController@update')->name('user_addresses.update');
     Route::delete('user_addresses/{user_address}', 'UserAddressesController@destroy')->name('user_addresses.destroy');
 
-    //商品收藏
+    // 商品收藏
     Route::get('products/favorites', 'ProductsController@favorites')->name('products.favorites');
     Route::post('products/{product}/favorite', 'ProductsController@favor')->name('products.favor');
     Route::delete('products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
 
-    //购物车
+    // 购物车
     Route::get('cart', 'CartController@index')->name('cart.index');
     Route::post('cart', 'CartController@add')->name('cart.add');
     Route::delete('cart/{sku}', 'CartController@remove')->name('cart.remove');
 
-    //订单
+    // 订单
     Route::get('orders', 'OrdersController@index')->name('orders.index');
     Route::post('orders', 'OrdersController@store')->name('orders.store');
     Route::get('orders/{order}', 'OrdersController@show')->name('orders.show');
+
+    // 支付宝支付
+    Route::get('payment/{order}/alipay', 'PaymentController@payByAlipay')->name('payment.alipay');
+    Route::get('payment/alipay/return', 'PaymentController@alipayReturn')->name('payment.alipay.return');
 });
 
 //商品详情
 Route::get('products/{product}','ProductsController@show')->name('products.show');
+
+// 服务端回调
+Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
 
 Route::get('alipay', function() {
     return app('alipay')->web([
