@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "dcat/laravel-admin": "^1.7",
+        "endroid/qr-code": "^3.9",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.18.35",
         "laravel/tinker": "^2.0",
