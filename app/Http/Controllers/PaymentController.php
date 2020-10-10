@@ -65,7 +65,7 @@ class PaymentController extends Controller
 
          $order->update([
              'paid_at' => Carbon::now(),
-             'payment' => 'alipay',
+             'payment_method' => 'alipay',
              'payment_no' => $data->trade_no,
          ]);
 

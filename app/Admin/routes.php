@@ -20,4 +20,6 @@ Route::group([
     //商品管理
     $router->resource('products','ProductsController');
 
+    //订单管理
+    $router->resource('orders','OrderController');
 });

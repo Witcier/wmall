@@ -16,6 +16,9 @@ class Order extends Model
     const SHIP_STATUS_DELIVERED = 'delivered';
     const SHIP_STATUS_RECEIVED = 'received';
 
+    const PAYMENT_METHOD_WECHAT = 'wechat';
+    const PAYMENT_METHOD_ALIPAY = 'alipay';
+
     public static $refundStatusMap = [
         self::REFUND_STATUS_PENDING => '未退款',
         self::REFUND_STATUS_APPLIED => '已申请退款',
@@ -28,6 +31,11 @@ class Order extends Model
         self::SHIP_STATUS_PENDING => '未发货',
         self::SHIP_STATUS_DELIVERED => '已发货',
         self::SHIP_STATUS_RECEIVED => '已收货',
+    ];
+
+    public static $paymentMethodsMap = [
+        self::PAYMENT_METHOD_WECHAT => '微信支付',
+        self::PAYMENT_METHOD_ALIPAY => '支付宝支付',
     ];
 
     protected $fillable = [
