@@ -24,6 +24,7 @@
                   <th class="text-center">数量</th>
                   <th class="text-center">订单总价</th>
                   <th class="text-center">状态</th>
+                  <th class="text-center">物流</th>
                   <th class="text-center">操作</th>
                 </tr>
                 </thead>
@@ -61,7 +62,17 @@
                           否则订单将自动关闭
                         @endif
                       </td>
-                      <td rowspan="{{ count($order->items) }}" class="text-center"><a class="btn btn-primary btn-sm" href="{{ route('orders.show',['order' => $order->id]) }}">查看订单</a></td>
+                      <td rowspan="{{ count($order->items) }}" class="text-center">{{ \App\Models\Order::$shipStatusMap[$order->ship_status] }}</td>
+                      <td rowspan="{{ count($order->items) }}" class="text-center">
+                        <a class="btn btn-primary btn-sm" href="{{ route('orders.show',['order' => $order->id]) }}">查看订单</a>
+                        <!-- 评价入口开始 -->
+                        @if($order->paid_at && $order->ship_status === \App\Models\Order::SHIP_STATUS_RECEIVED)
+                        <a class="btn btn-success btn-sm" href="{{ route('orders.review.show', ['order' => $order->id]) }}">
+                        {{ $order->reviewed ? '查看评价' : '评价' }}
+                        </a>
+                        @endif
+                        <!-- 评价入口结束 -->
+                      </td>
                     @endif
                   </tr>
                 @endforeach
