@@ -14,12 +14,14 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
 
-    //用户管理
+    // 用户管理
     $router->resource('users','UsersController');
 
-    //商品管理
+    // 商品管理
     $router->resource('products','ProductsController');
 
-    //订单管理
+    // 订单管理
     $router->resource('orders','OrderController');
+    // 订单发货
+    $router->post('order/{order}/ship','OrderController@ship')->name('admin.orders.ship');
 });

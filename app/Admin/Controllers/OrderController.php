@@ -3,15 +3,19 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Order;
+use App\Exceptions\InvalidRequestException;
+use App\Http\Requests\Request;
 use App\Models\Order as AppOrder;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class OrderController extends AdminController
 {
+    use ValidatesRequests;
     /**
      * Make a grid builder.
      *
@@ -89,31 +93,31 @@ class OrderController extends AdminController
         return view('admin/orders/show', $data);
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
+    public function ship(AppOrder $order, Request $request)
     {
-        return Form::make(new Order(), function (Form $form) {
-            $form->display('id');
-            $form->text('no');
-            $form->text('user_id');
-            $form->text('address');
-            $form->text('total_amount');
-            $form->text('remark');
-            $form->text('paid_at');
-            $form->text('payment_method');
-            $form->text('payment_no');
-            $form->text('refund_status');
-            $form->text('refund_no');
-            $form->text('closed');
-            $form->text('reviewed');
-            $form->text('ship_status');
+        // 判断当前订单是否已经支付
+        if (!$order->paid_at) {
+            throw new InvalidRequestException('该订单未付款');
+        }
+        // 判断订单是否已经发货
+        if ($order->ship_status !== Order::SHIP_STATUS_PENDING) {
+            throw new InvalidRequestException('该订单已发货');
+        }
 
-            $form->display('created_at');
-            $form->display('updated_at');
-        });
+        $data = $this->validate($request, [
+            'express_company' => ['required'],
+            'express_no'      => ['required'],
+        ],[],[
+            'express_company' => '物流公司',
+            'express_no'      => '物流单号',
+        ]);
+
+        // 将订单发货状态改为发货
+        $order->update([
+            'ship_status' => Order::SHIP_STATUS_DELIVERED,
+            'ship_data'   => $data,
+        ]);
+
+        return redirect()->back();
     }
 }
