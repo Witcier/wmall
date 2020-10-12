@@ -106,6 +106,8 @@ class ProductsController extends AdminController
             $form->saving(function (Form $form) {
                 $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ?: 0; 
             });
+
+            $form->disableViewButton();
         });
     }
 }

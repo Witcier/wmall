@@ -24,19 +24,18 @@ class UsersController extends AdminController
             $grid->column('email_verified_at')->sortable();
             $grid->column('created_at')->sortable();
             $grid->column('updated_at')->sortable();
+
+            $grid->actions(function ($actions) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+            });
         
             $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
                 $filter->equal('id');
-        
             });
-
 
             $grid->toolsWithOutline(false);
-            
-            $grid->filter(function (Grid\Filter $filter) {
-                // 更改为 panel 布局
-                $filter->panel();
-            });
         });
     }
 
@@ -54,10 +53,13 @@ class UsersController extends AdminController
             $show->field('name');
             $show->field('email');
             $show->field('email_verified_at');
-            $show->field('password');
-            $show->field('remember_token');
             $show->field('created_at');
             $show->field('updated_at');
+
+            $show->tools(function ($tools) {
+                $tools->disableDelete();
+                $tools->disableEdit();
+            });
         });
     }
 

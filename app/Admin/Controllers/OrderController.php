@@ -3,10 +3,12 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Order;
+use App\Models\Order as AppOrder;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Layout\Content;
 
 class OrderController extends AdminController
 {
@@ -69,28 +71,22 @@ class OrderController extends AdminController
      *
      * @return Show
      */
-    protected function detail($id)
+    public function show($id, Content $content)
     {
-        return Show::make($id, new Order(), function (Show $show) {
-            $show->field('id');
-            $show->field('no');
-            $show->field('user_id');
-            $show->field('address');
-            $show->field('total_amount');
-            $show->field('remark');
-            $show->field('paid_at');
-            $show->field('payment_method');
-            $show->field('payment_no');
-            $show->field('refund_status');
-            $show->field('refund_no');
-            $show->field('closed');
-            $show->field('reviewed');
-            $show->field('ship_status');
-            $show->field('ship_data');
-            $show->field('extra');
-            $show->field('created_at');
-            $show->field('updated_at');
-        });
+
+        $order = AppOrder::find($id);
+        $data = [
+            'order' => $order
+        ];
+        return $content
+            ->title('订单')
+            ->description('详情')
+            ->body($this->_detail($data));
+    }
+
+    private function _detail($data)
+    {
+        return view('admin/orders/show', $data);
     }
 
     /**
@@ -115,9 +111,7 @@ class OrderController extends AdminController
             $form->text('closed');
             $form->text('reviewed');
             $form->text('ship_status');
-            $form->text('ship_data');
-            $form->text('extra');
-        
+
             $form->display('created_at');
             $form->display('updated_at');
         });
