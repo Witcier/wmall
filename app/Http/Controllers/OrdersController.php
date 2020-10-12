@@ -40,4 +40,20 @@ class OrdersController extends Controller
         $this->authorize('own',$order);
         return view('orders.show',['order' => $order->load(['items.productSku','items.product'])]);
     }
+
+    public function received(Order $order, Request $request)
+    {
+        // 校验权限
+        $this->authorize('own',$order);
+
+        // 判断订单是否已经发货
+        if ($order->ship_status !== Order::SHIP_STATUS_DELIVERED) {
+            throw new InvalidRequestException('订单未发货');
+        }
+
+        //更新订单发货状态
+        $order->update(['ship_status' => Order::SHIP_STATUS_RECEIVED]);
+
+        return $order;
+    }
 }
