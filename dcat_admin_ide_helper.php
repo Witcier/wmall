@@ -45,6 +45,15 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection remember_token
      * @property Grid\Column|Collection product_sku_id
      * @property Grid\Column|Collection amount
+     * @property Grid\Column|Collection code
+     * @property Grid\Column|Collection type
+     * @property Grid\Column|Collection value
+     * @property Grid\Column|Collection total
+     * @property Grid\Column|Collection used
+     * @property Grid\Column|Collection min_amount
+     * @property Grid\Column|Collection start_time
+     * @property Grid\Column|Collection end_time
+     * @property Grid\Column|Collection status
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
@@ -61,6 +70,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection total_amount
      * @property Grid\Column|Collection remark
      * @property Grid\Column|Collection paid_at
+     * @property Grid\Column|Collection coupon_code_id
      * @property Grid\Column|Collection payment_method
      * @property Grid\Column|Collection payment_no
      * @property Grid\Column|Collection refund_status
@@ -73,7 +83,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection email
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection stock
-     * @property Grid\Column|Collection status
      * @property Grid\Column|Collection sold_count
      * @property Grid\Column|Collection review_count
      * @property Grid\Column|Collection province
@@ -119,6 +128,15 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection remember_token(string $label = null)
      * @method Grid\Column|Collection product_sku_id(string $label = null)
      * @method Grid\Column|Collection amount(string $label = null)
+     * @method Grid\Column|Collection code(string $label = null)
+     * @method Grid\Column|Collection type(string $label = null)
+     * @method Grid\Column|Collection value(string $label = null)
+     * @method Grid\Column|Collection total(string $label = null)
+     * @method Grid\Column|Collection used(string $label = null)
+     * @method Grid\Column|Collection min_amount(string $label = null)
+     * @method Grid\Column|Collection start_time(string $label = null)
+     * @method Grid\Column|Collection end_time(string $label = null)
+     * @method Grid\Column|Collection status(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
@@ -135,6 +153,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection total_amount(string $label = null)
      * @method Grid\Column|Collection remark(string $label = null)
      * @method Grid\Column|Collection paid_at(string $label = null)
+     * @method Grid\Column|Collection coupon_code_id(string $label = null)
      * @method Grid\Column|Collection payment_method(string $label = null)
      * @method Grid\Column|Collection payment_no(string $label = null)
      * @method Grid\Column|Collection refund_status(string $label = null)
@@ -147,7 +166,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection email(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection stock(string $label = null)
-     * @method Grid\Column|Collection status(string $label = null)
      * @method Grid\Column|Collection sold_count(string $label = null)
      * @method Grid\Column|Collection review_count(string $label = null)
      * @method Grid\Column|Collection province(string $label = null)
@@ -198,6 +216,15 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection remember_token
      * @property Show\Field|Collection product_sku_id
      * @property Show\Field|Collection amount
+     * @property Show\Field|Collection code
+     * @property Show\Field|Collection type
+     * @property Show\Field|Collection value
+     * @property Show\Field|Collection total
+     * @property Show\Field|Collection used
+     * @property Show\Field|Collection min_amount
+     * @property Show\Field|Collection start_time
+     * @property Show\Field|Collection end_time
+     * @property Show\Field|Collection status
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
@@ -214,6 +241,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection total_amount
      * @property Show\Field|Collection remark
      * @property Show\Field|Collection paid_at
+     * @property Show\Field|Collection coupon_code_id
      * @property Show\Field|Collection payment_method
      * @property Show\Field|Collection payment_no
      * @property Show\Field|Collection refund_status
@@ -226,7 +254,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection email
      * @property Show\Field|Collection token
      * @property Show\Field|Collection stock
-     * @property Show\Field|Collection status
      * @property Show\Field|Collection sold_count
      * @property Show\Field|Collection review_count
      * @property Show\Field|Collection province
@@ -272,6 +299,15 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection remember_token(string $label = null)
      * @method Show\Field|Collection product_sku_id(string $label = null)
      * @method Show\Field|Collection amount(string $label = null)
+     * @method Show\Field|Collection code(string $label = null)
+     * @method Show\Field|Collection type(string $label = null)
+     * @method Show\Field|Collection value(string $label = null)
+     * @method Show\Field|Collection total(string $label = null)
+     * @method Show\Field|Collection used(string $label = null)
+     * @method Show\Field|Collection min_amount(string $label = null)
+     * @method Show\Field|Collection start_time(string $label = null)
+     * @method Show\Field|Collection end_time(string $label = null)
+     * @method Show\Field|Collection status(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)
@@ -288,6 +324,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection total_amount(string $label = null)
      * @method Show\Field|Collection remark(string $label = null)
      * @method Show\Field|Collection paid_at(string $label = null)
+     * @method Show\Field|Collection coupon_code_id(string $label = null)
      * @method Show\Field|Collection payment_method(string $label = null)
      * @method Show\Field|Collection payment_no(string $label = null)
      * @method Show\Field|Collection refund_status(string $label = null)
@@ -300,7 +337,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection email(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection stock(string $label = null)
-     * @method Show\Field|Collection status(string $label = null)
      * @method Show\Field|Collection sold_count(string $label = null)
      * @method Show\Field|Collection review_count(string $label = null)
      * @method Show\Field|Collection province(string $label = null)
