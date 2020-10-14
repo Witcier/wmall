@@ -23,5 +23,7 @@ Route::group([
     // 订单管理
     $router->resource('orders','OrderController');
     // 订单发货
-    $router->post('order/{order}/ship','OrderController@ship')->name('admin.orders.ship');
+    $router->post('orders/{order}/ship','OrderController@ship')->name('admin.orders.ship');
+    // 订单退款
+    $router->post('orders/{order}/refund','OrderController@handleRefund')->name('admin.orders.handle_refund');
 });

@@ -48,16 +48,21 @@
         <td>发货状态：</td>
         <td>{{ \App\Models\Order::$shipStatusMap[$order->ship_status] }}</td>
       </tr>
+      <tr>
+        <td>订单备注：</td>
+        <td>{{ $order->remark }}</td>
+      </tr>
       <!-- 订单发货开始 -->
       <!-- 如果订单未发货，展示发货表单 -->
       @if($order->ship_status === \App\Models\Order::SHIP_STATUS_PENDING)
+      @if($order->refund_status !== \App\Models\Order::REFUND_STATUS_SUCCESS)
       <tr>
         <td colspan="4">
           <form action="{{ route('admin.orders.ship', [$order->id]) }}" method="post" class="form-inline">
             <!-- 别忘了 csrf token 字段 -->
             {{ csrf_field() }}
             <div class="form-group {{ $errors->has('express_company') ? 'has-error' : '' }}">
-              <label for="express_company" class="control-label">物流公司</label>
+              <label for="express_company" class="control-label">物流公司：</label>
               <input type="text" id="express_company" name="express_company" value="" class="form-control" placeholder="输入物流公司">
               @if($errors->has('express_company'))
                 @foreach($errors->get('express_company') as $msg)
@@ -66,7 +71,7 @@
               @endif
             </div>
             <div class="form-group {{ $errors->has('express_no') ? 'has-error' : '' }}">
-              <label for="express_no" class="control-label">物流单号</label>
+              <label for="express_no" class="control-label">物流单号：</label>
               <input type="text" id="express_no" name="express_no" value="" class="form-control" placeholder="输入物流单号">
               @if($errors->has('express_no'))
                 @foreach($errors->get('express_no') as $msg)
@@ -87,8 +92,109 @@
         <td>{{ $order->ship_data['express_no'] }}</td>
       </tr>
       @endif
+      @endif
       <!-- 订单发货结束 -->
+      @if($order->refund_status !== \App\Models\Order::REFUND_STATUS_PENDING)
+        <tr>
+          <td>退款状态：</td>
+          <td>{{ \App\Models\Order::$refundStatusMap[$order->refund_status] }}</td>
+          @if($order->extra['refund_reason'])
+          <td>理由：</td>
+          <td colspan="2">{{ $order->extra['refund_reason'] }}</td>
+          @endif
+          <td>
+            <!-- 如果订单退款状态是已申请，则展示处理按钮 -->
+            @if($order->refund_status === \App\Models\Order::REFUND_STATUS_APPLIED)
+            <button class="btn btn-sm btn-success" id="btn-refund-agree">同意</button>
+            <button class="btn btn-sm btn-danger" id="btn-refund-disagree">不同意</button>
+            @endif
+          </td>
+        </tr>
+        @endif
       </tbody>
     </table>
   </div>
 </div>
+
+<script>
+Dcat.ready(function() {
+  // 不同意 按钮的点击事件
+  $('#btn-refund-disagree').click(function() {
+    Dcat.swal.fire({
+      title: '输入拒绝退款理由',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      showLoaderOnConfirm: true,
+      preConfirm: function(inputValue) {
+        if (!inputValue) {
+          Dcat.error('理由不能为空', null, {
+            timeOut: 2000, 
+          });
+          return false;
+        }
+        $.ajax({
+          url: '{{ route('admin.orders.handle_refund', [$order->id]) }}',
+          type: 'POST',
+          data: JSON.stringify({   // 将请求变成 JSON 字符串
+            agree: false,  // 拒绝申请
+            reason: inputValue,
+          }),
+          contentType: 'application/json',  // 请求的数据格式为 JSON
+          success: function (res) {
+            Dcat.success('退款拒绝成功', null, {
+              timeOut: 2000, 
+            });
+            location.reload();
+          },
+          error: function () {
+            Dcat.success('退款拒绝失败', null, {
+              timeOut: 2000, 
+            });
+            location.reload();
+          }
+        });
+      },
+      allowOutsideClick: false
+    }).then(function (ret) {
+      // 如果用户点击了『取消』按钮，则不做任何操作
+      if (ret.dismiss === 'cancel') {
+        return;
+      }
+    });
+  });
+
+  // 同意 按钮的点击事件
+  $('#btn-refund-agree').click(function() {
+      Dcat.swal.fire({
+        title: '确认要将款项退还给用户？',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        showLoaderOnConfirm: true,
+        preConfirm: function() {
+          return $.ajax({
+            url: '{{ route('admin.orders.handle_refund', [$order->id]) }}',
+            type: 'POST',
+            data: JSON.stringify({
+              agree: true, // 代表同意退款
+            }),
+            contentType: 'application/json',
+          });
+        },
+        allowOutsideClick: false
+      }).then(function (ret) {
+        // 如果用户点击了『取消』按钮，则不做任何操作
+        if (ret.dismiss === 'cancel') {
+          return;
+        }
+        Dcat.success('退款拒绝成功', null, {
+          timeOut: 2000, 
+        });
+        // location.reload();
+      });
+    });
+});
+</script>
