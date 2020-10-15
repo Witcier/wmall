@@ -18,6 +18,8 @@ class ProductsController extends AdminController
     protected function grid()
     {
         return Grid::make(new Product(), function (Grid $grid) {
+            $grid->model()->orderBy('updated_at', 'desc');
+            
             $grid->column('id')->sortable();
             $grid->column('title');
             $grid->image()->image('',80,80);

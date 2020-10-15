@@ -18,7 +18,7 @@ class OrderService
     {
         // 如果传入了优惠卷，先检测是否可用
         if ($coupon) {
-            $coupon->checkAvailable();
+            $coupon->checkAvailable($user);
         }
         $order = \DB::transaction(function () use ($user, $address, $remark, $items, $coupon) {
             // 更新此地址的最后使用时间
@@ -60,7 +60,7 @@ class OrderService
 
             if ($coupon) {
                 // 检测优惠卷
-                $coupon->checkAvailable($totalAmount);
+                $coupon->checkAvailable($user, $totalAmount);
                 // 修改订单的总金额
                 $totalAmount = $coupon->getAdjustedPrice($totalAmount);
                 // 将订单与优惠卷关联

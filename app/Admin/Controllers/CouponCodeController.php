@@ -18,6 +18,8 @@ class CouponCodeController extends AdminController
     protected function grid()
     {
         return Grid::make(new CouponCode(), function (Grid $grid) {
+            $grid->model()->orderBy('created_at', 'desc');
+            
             $grid->column('name');
             $grid->column('code');
             $grid->column('description','优惠卷');

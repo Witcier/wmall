@@ -27,6 +27,8 @@ class OrderController extends AdminController
     protected function grid()
     {
         return Grid::make(new Order('user','items'), function (Grid $grid) {
+            $grid->model()->orderBy('updated_at', 'desc');
+
             $grid->column('id')->sortable();
             $grid->column('no');
             $grid->column('user.name','买家');
