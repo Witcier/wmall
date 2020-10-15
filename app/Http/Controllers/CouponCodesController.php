@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\CouponCodeUnavailableException;
 use Illuminate\Http\Request;
 use App\Models\CouponCode;
 use Carbon\Carbon;
@@ -12,25 +13,10 @@ class CouponCodesController extends Controller
     {
         // 判断优惠卷是否存在
         if (!$record = CouponCode::where('code',$code)->first()) {
-            abort(404);
+            throw new CouponCodeUnavailableException('优惠卷不存在');
         }
 
-        // 判断哟慧娟是否启用
-        if (!$record->status) {
-            abort(404);
-        }
-
-        if ($record->total - $record->used <= 0) {
-            return response()->json(['msg' => '该优惠卷已经被领完了'], 403);
-        }
-
-        if ($record->start_time && $record->start_time->gt(Carbon::now())) {
-            return response()->json(['msg' => '该优惠卷现在还不能使用'], 403);
-        }
-
-        if ($record->end_time && $record->end_time->lt(Carbon::now())) {
-            return response()->json(['msg' => '该优惠卷已过期'], 403);
-        }
+        $record->checkAvailable();
 
         return $record;
     }
