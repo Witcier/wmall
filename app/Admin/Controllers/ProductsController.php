@@ -21,12 +21,13 @@ class ProductsController extends AdminController
             $grid->column('id')->sortable();
             $grid->column('title');
             $grid->image()->image('',80,80);
-            $grid->column('status')->display(function ($value) {
-                return $value ? '是' : '否';
-            })->label([
-                1 => 'success',
-                0 => 'danger',
-            ]);
+            // $grid->column('status')->display(function ($value) {
+            //     return $value ? '是' : '否';
+            // })->label([
+            //     1 => 'success',
+            //     0 => 'danger',
+            // ]);
+            $grid->column('status')->switch();
             $grid->column('rating')->sortable();
             $grid->column('sold_count')->sortable();
             $grid->column('review_count')->sortable();

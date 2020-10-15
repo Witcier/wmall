@@ -26,7 +26,7 @@ class OrderController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(new Order('user'), function (Grid $grid) {
+        return Grid::make(new Order('user','items'), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('no');
             $grid->column('user.name','买家');
@@ -63,6 +63,7 @@ class OrderController extends AdminController
             $grid->column('created_at')->sortable();
 
             // 操作
+            $grid->disableCreateButton();
             $grid->actions(function ($actions) {
                 $actions->disableDelete();
                 $actions->disableEdit();
@@ -71,6 +72,25 @@ class OrderController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
                 $filter->like('user.name','买家');
+            });
+            // $grid->quickSearch('user.name','')->placeholder('快速搜索...');
+
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+                $selector->select('brand', '品牌', ['AiW', '全有家居', 'YaLM', '甜梦', '饭爱家具', '偶堂家私']);
+                $selector->select('category', '类别', ['茶几', '地柜式', '边几', '布艺沙发', '茶台', '炕几']);
+                $selector->select('style', '风格', ['现代简约', '新中式', '田园风', '明清古典', '北欧', '轻奢', '古典']);
+                $selector->select('total_amount', '订单金额', ['0-599', '600-1999', '1999-4999', '5000+'], function ($query, $value) {
+                    $between = [
+                        [0, 599],
+                        [600, 1999],
+                        [2000, 4999],
+                        [5000,10000000],
+                    ];
+                
+                    $value = current($value);
+                
+                    $query->whereBetween('total_amount', $between[$value]);
+                });
             });
 
             $grid->toolsWithOutline(false);

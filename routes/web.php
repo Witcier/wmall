@@ -57,6 +57,9 @@ Route::group(['middleware' => ['auth','verified']], function () {
 
     // 微信支付
     Route::get('payment/{order}/wechat', 'PaymentController@payByWechat')->name('payment.wechat');
+
+    // 优惠卷检测
+    Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
 });
 
 //商品详情

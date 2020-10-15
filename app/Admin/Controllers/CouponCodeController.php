@@ -24,12 +24,13 @@ class CouponCodeController extends AdminController
             $grid->column('useage','已使用/总量')->display( function ($value) {
                 return "{$this->used} / {$this->total}";
             });
-            $grid->column('status')->display( function ($value) {
-                return $value ? '是' : '否';
-            })->label([
-                1 => 'primary',
-                0 => 'default',
-            ]);
+            // $grid->column('status')->display( function ($value) {
+            //     return $value ? '是' : '否';
+            // })->label([
+            //     1 => 'primary',
+            //     0 => 'default',
+            // ]);
+            $grid->column('status')->switch();
             $grid->column('start_time');
             $grid->column('end_time');
             
