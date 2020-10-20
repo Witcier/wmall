@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderReviewed;
 use App\Exceptions\CouponCodeUnavailableException;
 use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
@@ -83,6 +84,44 @@ class OrderService
 
         // 这里我们直接使用 dispatch 函数
         dispatch(new CloseOrder($order,config('app.order_ttl')));
+
+        return $order;
+    }
+
+    public function sendReview(Order $order, $reviews)
+    {
+        // 开启事务
+        \DB::transaction(function () use ($reviews, $order) {
+            // 遍历用户提交的数据
+            foreach ($reviews as $review) {
+                $orderItem = $order->items()->find($review['id']);
+
+                // 保存评价和评分
+                $orderItem->update([
+                    'rating' => $review['rating'],
+                    'review' => $review['review'],
+                    'reviewed_at' => Carbon::now(),
+                ]);
+            }
+
+            // 将订单改为已经评价
+            $order->update(['reviewed' => true]);
+
+            event(new OrderReviewed($order));
+        });
+    }
+
+    public function applyRefund(Order $order, $reason)
+    {
+        // 将用户输入的退款理由放到订单的 extra 字段
+        $extra = $order->extra ?: [];
+        $extra['refund_reason'] = $reason;
+
+        // 将订单的退款状态改为申请退款
+        $order->update([
+            'refund_status' => Order::REFUND_STATUS_APPLIED,
+            'extra'         => $extra,
+        ]);
 
         return $order;
     }

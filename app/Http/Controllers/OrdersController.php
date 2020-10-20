@@ -89,7 +89,7 @@ class OrdersController extends Controller
         return view('orders.review',['order' => $order->load(['items.productSku','items.product'])]);
     }
 
-    public function sendReview(Order $order, SendReviewRequest $request)
+    public function sendReview(Order $order, SendReviewRequest $request, OrderService $orderService)
     {
         // 校验权限
         $this->authorize('own',$order);
@@ -111,30 +111,12 @@ class OrdersController extends Controller
 
         $reviews = $request->input('reviews');
 
-        // 开启事务
-        \DB::transaction(function () use ($reviews, $order) {
-            // 遍历用户提交的数据
-            foreach ($reviews as $review) {
-                $orderItem = $order->items()->find($review['id']);
-
-                // 保存评价和评分
-                $orderItem->update([
-                    'rating' => $review['rating'],
-                    'review' => $review['review'],
-                    'reviewed_at' => Carbon::now(),
-                ]);
-            }
-
-            // 将订单改为已经评价
-            $order->update(['reviewed' => true]);
-
-            event(new OrderReviewed($order));
-        });
+        $orderService->sendReview($order, $reviews);
 
         return redirect()->back();
     }
 
-    public function applyRefund(Order $order, ApplyRefundRequest $request)
+    public function applyRefund(Order $order, ApplyRefundRequest $request, OrderService $orderService)
     {
         // 校验权限
         $this->authorize('own',$order);
@@ -149,16 +131,8 @@ class OrdersController extends Controller
             throw new InvalidRequestException('该订单已经申请退款了，请勿重复申请');
         }
 
-        // 将用户输入的退款理由放到订单的 extra 字段
-        $extra = $order->extra ?: [];
-        $extra['refund_reason'] = $request->input('reason');
+        $reason = $request->input('reason');
 
-        // 将订单的退款状态改为申请退款
-        $order->update([
-            'refund_status' => Order::REFUND_STATUS_APPLIED,
-            'extra'         => $extra,
-        ]);
-
-        return $order;
+        return $orderService->applyRefund($order, $reason);
     }
 }
