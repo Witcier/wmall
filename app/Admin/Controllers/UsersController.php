@@ -19,12 +19,15 @@ class UsersController extends AdminController
     {
         return Grid::make(new User(), function (Grid $grid) {
             $grid->column('id')->sortable();
-            $grid->column('name');
+            $grid->column('name')->filter(
+                Grid\Column\Filter\Like::make()
+            );
             $grid->column('email');
             $grid->column('email_verified_at')->sortable();
             $grid->column('created_at')->sortable();
             $grid->column('updated_at')->sortable();
 
+            $grid->disableCreateButton();
             $grid->actions(function ($actions) {
                 $actions->disableDelete();
                 $actions->disableEdit();

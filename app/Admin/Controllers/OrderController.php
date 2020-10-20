@@ -8,11 +8,13 @@ use App\Exceptions\InvalidRequestException;
 use App\Http\Requests\Admin\HandleRefundRequest;
 use App\Http\Requests\Request;
 use App\Models\Order as AppOrder;
+use App\Models\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
+use Carbon\Carbon;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Dcat;
 
@@ -30,25 +32,52 @@ class OrderController extends AdminController
             $grid->model()->orderBy('updated_at', 'desc');
 
             $grid->column('id')->sortable();
-            $grid->column('no');
-            $grid->column('user.name','买家');
-            $grid->column('total_amount')->sortable();
+            $grid->column('no')->filter(
+                Grid\Column\Filter\Like::make()
+            );
+            $grid->column('user.name','买家')->filter(
+                Grid\Column\Filter\Like::make()
+            );
+            $grid->column('total_amount')->filter(
+                Grid\Column\Filter\Between::make()
+            );
             $grid->column('payment_method')->display( function ($value) {
                 return $value === 'alipay' ? '支付宝支付' : ($value === 'alipay' ? '微信支付' : '未支付');
-            })->label('success');
+            })->label('success')->filter(
+                Grid\Column\Filter\In::make([
+                    'wechat' => '微信支付',
+                    'alipay'  => '支付宝支付',
+                ])
+            );
             $grid->column('closed')->display(function ($value) {
                 return $value ? '是' : '否';
             })->label([
                 1 => 'danger',
                 0 => 'default',
-            ]);
+            ])->filter(
+                Grid\Column\Filter\In::make([
+                    0 => '否',
+                    1 => '是',
+                ])
+            );
             $grid->column('reviewed')->display( function ($value) {
                 return $value ? '是' : '否';
             })->label([
                 1 => 'default',
                 0 => 'primary',
-            ]);
-            $grid->column('ship_status')->display( function ($value) {
+            ])->filter(
+                Grid\Column\Filter\In::make([
+                    0 => '否',
+                    1 => '是',
+                ])
+            );
+            $grid->column('ship_status')->filter(
+                Grid\Column\Filter\In::make([
+                    'pending' => '未发货',
+                    'delivered' => '已发货',
+                    'received' => '已收货',
+                ])
+            )->display( function ($value) {
                 return Order::$shipStatusMap[$value];
             });
             $grid->column('refund_status')->display( function ($value) {
@@ -58,11 +87,22 @@ class OrderController extends AdminController
                 'applied' => 'yellow',
                 'failed'  => 'danger',
                 'success' => 'success',
-            ]);
+            ])->filter(
+                Grid\Column\Filter\In::make([
+                    'pending' => '未退款',
+                    'applied' => '已申请退款',
+                    'failed'  => '退款失败',
+                    'success' => '退款成功',
+                ])
+            );
             $grid->column('paid_at')->display( function ($value) {
                 return $value ? $value : '未支付';
-            });
-            $grid->column('created_at')->sortable();
+            })->filter(
+                Grid\Column\Filter\Between::make()->datetime()
+            );
+            $grid->column('created_at')->filter(
+                Grid\Column\Filter\Between::make()->datetime()
+            )->sortable();
 
             // 操作
             $grid->disableCreateButton();
@@ -70,18 +110,35 @@ class OrderController extends AdminController
                 $actions->disableDelete();
                 $actions->disableEdit();
             });
+
+            //导出
+            $data = [
+                'no' => '订单号',
+                'user_name' => '买家',
+                'total_amount' => '总金额',
+                'payment_method' => '支付方式',
+                'created_at' => '创建时间',
+            ];
+
+            $grid->export()->titles($data)->rows(function (array $rows) {
+                foreach ($rows as $index => &$row) {
+                    $row['user_name'] = User::where('id',$row['user_id'])->value('name');
+                }
+                return $rows;
+            })->filename('Witcier Mall订单'.Carbon::now());
         
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-                $filter->like('user.name','买家');
+                $filter->equal('id')->width(3);
+                $filter->like('user.name','买家')->width(3);
+                $filter->between('created_at', '创建时间')->datetime()->width(3);
             });
             // $grid->quickSearch('user.name','')->placeholder('快速搜索...');
 
             $grid->selector(function (Grid\Tools\Selector $selector) {
-                $selector->select('brand', '品牌', ['AiW', '全有家居', 'YaLM', '甜梦', '饭爱家具', '偶堂家私']);
-                $selector->select('category', '类别', ['茶几', '地柜式', '边几', '布艺沙发', '茶台', '炕几']);
-                $selector->select('style', '风格', ['现代简约', '新中式', '田园风', '明清古典', '北欧', '轻奢', '古典']);
-                $selector->select('total_amount', '订单金额', ['0-599', '600-1999', '1999-4999', '5000+'], function ($query, $value) {
+                $selector->selectOne('payment_method', '支付方式', ['alipay' => '支付宝支付', 'wechat' => '微信支付']);
+                $selector->selectOne('closed', '订单关闭', [1 => '是', 0 => '否']);
+                $selector->selectOne('ship_status', '物流状态', ['pending' => '未发货', 'delivered' => '已发货', 'received' => '已收货']);
+                $selector->selectOne('total_amount', '订单金额', ['0-599', '600-1999', '1999-4999', '5000+'], function ($query, $value) {
                     $between = [
                         [0, 599],
                         [600, 1999],
@@ -90,7 +147,6 @@ class OrderController extends AdminController
                     ];
                 
                     $value = current($value);
-                
                     $query->whereBetween('total_amount', $between[$value]);
                 });
             });

@@ -20,18 +20,14 @@ class CouponCodeController extends AdminController
         return Grid::make(new CouponCode(), function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'desc');
             
-            $grid->column('name');
+            $grid->column('name')->filter(
+                Grid\Column\Filter\Like::make()
+            );
             $grid->column('code');
             $grid->column('description','优惠卷');
             $grid->column('useage','已使用/总量')->display( function ($value) {
                 return "{$this->used} / {$this->total}";
             });
-            // $grid->column('status')->display( function ($value) {
-            //     return $value ? '是' : '否';
-            // })->label([
-            //     1 => 'primary',
-            //     0 => 'default',
-            // ]);
             $grid->column('status')->switch();
             $grid->column('start_time');
             $grid->column('end_time');
