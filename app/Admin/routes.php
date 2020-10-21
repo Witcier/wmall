@@ -15,18 +15,22 @@ Route::group([
     $router->get('/', 'HomeController@index');
 
     // 用户管理
-    $router->resource('users','UsersController');
+    $router->resource('users', 'UsersController');
 
     // 商品管理
-    $router->resource('products','ProductsController');
+    $router->resource('products', 'ProductsController');
 
     // 订单管理
-    $router->resource('orders','OrderController');
+    $router->resource('orders', 'OrderController');
     // 订单发货
-    $router->post('orders/{order}/ship','OrderController@ship')->name('admin.orders.ship');
+    $router->post('orders/{order}/ship', 'OrderController@ship')->name('admin.orders.ship');
     // 订单退款
-    $router->post('orders/{order}/refund','OrderController@handleRefund')->name('admin.orders.handle_refund');
+    $router->post('orders/{order}/refund', 'OrderController@handleRefund')->name('admin.orders.handle_refund');
 
     // 优惠卷管理
-    $router->resource('coupon_codes','CouponCodeController');
+    $router->resource('coupon_codes', 'CouponCodeController');
+
+    // 商品类目管理
+    $router->resource('categories', 'CategoryController');
+    $router->get('api/categories', 'CategoryController@apiIndex');
 });

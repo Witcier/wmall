@@ -45,6 +45,8 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection remember_token
      * @property Grid\Column|Collection product_sku_id
      * @property Grid\Column|Collection amount
+     * @property Grid\Column|Collection is_directory
+     * @property Grid\Column|Collection level
      * @property Grid\Column|Collection code
      * @property Grid\Column|Collection type
      * @property Grid\Column|Collection value
@@ -83,6 +85,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection email
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection stock
+     * @property Grid\Column|Collection category_id
      * @property Grid\Column|Collection sold_count
      * @property Grid\Column|Collection review_count
      * @property Grid\Column|Collection province
@@ -128,6 +131,8 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection remember_token(string $label = null)
      * @method Grid\Column|Collection product_sku_id(string $label = null)
      * @method Grid\Column|Collection amount(string $label = null)
+     * @method Grid\Column|Collection is_directory(string $label = null)
+     * @method Grid\Column|Collection level(string $label = null)
      * @method Grid\Column|Collection code(string $label = null)
      * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection value(string $label = null)
@@ -166,6 +171,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection email(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection stock(string $label = null)
+     * @method Grid\Column|Collection category_id(string $label = null)
      * @method Grid\Column|Collection sold_count(string $label = null)
      * @method Grid\Column|Collection review_count(string $label = null)
      * @method Grid\Column|Collection province(string $label = null)
@@ -216,6 +222,8 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection remember_token
      * @property Show\Field|Collection product_sku_id
      * @property Show\Field|Collection amount
+     * @property Show\Field|Collection is_directory
+     * @property Show\Field|Collection level
      * @property Show\Field|Collection code
      * @property Show\Field|Collection type
      * @property Show\Field|Collection value
@@ -254,6 +262,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection email
      * @property Show\Field|Collection token
      * @property Show\Field|Collection stock
+     * @property Show\Field|Collection category_id
      * @property Show\Field|Collection sold_count
      * @property Show\Field|Collection review_count
      * @property Show\Field|Collection province
@@ -299,6 +308,8 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection remember_token(string $label = null)
      * @method Show\Field|Collection product_sku_id(string $label = null)
      * @method Show\Field|Collection amount(string $label = null)
+     * @method Show\Field|Collection is_directory(string $label = null)
+     * @method Show\Field|Collection level(string $label = null)
      * @method Show\Field|Collection code(string $label = null)
      * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection value(string $label = null)
@@ -337,6 +348,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection email(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection stock(string $label = null)
+     * @method Show\Field|Collection category_id(string $label = null)
      * @method Show\Field|Collection sold_count(string $label = null)
      * @method Show\Field|Collection review_count(string $label = null)
      * @method Show\Field|Collection province(string $label = null)
