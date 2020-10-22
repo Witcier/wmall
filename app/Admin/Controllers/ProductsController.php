@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Product;
+use App\Models\Category;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -19,12 +20,15 @@ class ProductsController extends AdminController
     {
         return Grid::make(new Product(), function (Grid $grid) {
             $grid->model()->orderBy('updated_at', 'desc');
+            // 使用 with 来预加载商品类目数据，减少 SQL 查询
+            $grid->model()->with(['category']);
             
             $grid->column('id')->sortable();
             $grid->column('title')->filter(
                 Grid\Column\Filter\Like::make()
             );
             $grid->image()->image('',80,80);
+            $grid->column('category.name','分类');
             $grid->column('status')->switch();
             $grid->column('rating')->sortable();
             $grid->column('sold_count')->sortable();
@@ -59,30 +63,6 @@ class ProductsController extends AdminController
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Product(), function (Show $show) {
-            $show->field('id');
-            $show->field('title');
-            $show->field('description');
-            $show->field('image');
-            $show->field('status');
-            $show->field('rating');
-            $show->field('sold_count');
-            $show->field('review_count');
-            $show->field('price');
-            $show->field('created_at');
-            $show->field('updated_at');
-        });
-    }
-
-    /**
      * Make a form builder.
      *
      * @return Form
@@ -90,9 +70,17 @@ class ProductsController extends AdminController
     protected function form()
     {
         return Form::make(new Product('skus'), function (Form $form) {
-            $form->display('id');
             $form->text('title')->rules('required');
             $form->image('image')->rules('required|image');
+
+            // 添加一个分类字段， 与之前的分类管理类似， 使用ajax的方式来添加搜索
+            $form->select('category_id','分类')->options(function ($id) {
+                $category = Category::find($id);
+                if ($category) {
+                    return [$category->id => $category->full_name];
+                }
+            })->ajax('api/categories?is_directory=0');
+
             $form->editor('description')->rules('required');
             $form->radio('status')->options(['1' => '是','0' => '否'])->default(0);
             $form->hasMany('skus','商品规格表',function (Form\NestedForm $form) {
