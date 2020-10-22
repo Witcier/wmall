@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Repositories\Category;
+use App\Models\Category;
 use App\Models\Category as AppCategory;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -21,7 +21,18 @@ class CategoryController extends AdminController
     protected function grid()
     {
         return Grid::make(new Category(), function (Grid $grid) {
-            $grid->column('id')->sortable();
+            // $grid->id('ID')->bold()->sortable();
+            // $grid->name()->tree(false,false);
+
+            // $grid->created_at;
+            // $grid->updated_at->sortable();
+
+            // $grid->filter(function (Grid\Filter $filter) {
+            //     $filter->like('slug');
+            //     $filter->like('name');
+            //     $filter->like('http_path');
+            // });
+            
             $grid->column('name');
             $grid->column('parent_id');
             $grid->column('is_directory')->display(function ($value) {
@@ -57,7 +68,7 @@ class CategoryController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new Category('parent'), function (Form $form) {
+        return Form::make(new Category(), function (Form $form) {
             $form->text('name')->rules('required');
 
             // 如果是编辑的情况

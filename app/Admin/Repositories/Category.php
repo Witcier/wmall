@@ -4,6 +4,7 @@ namespace App\Admin\Repositories;
 
 use App\Models\Category as Model;
 use Dcat\Admin\Repositories\EloquentRepository;
+use Dcat\Admin\Traits\ModelTree;
 
 class Category extends EloquentRepository
 {

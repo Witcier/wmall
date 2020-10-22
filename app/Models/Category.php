@@ -2,10 +2,24 @@
 
 namespace App\Models;
 
+use Dcat\Admin\Traits\ModelTree;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    use ModelTree;
+
+    protected $titleColumn = 'name';
+
+    protected $parentColumn = 'parent_id';
+
+    protected $orderColumn = 'displayorder';
+
+    public function getOrderColumn()
+    {
+        return null;
+    }
+
     protected $fillable = [
         'name',
         'is_directory',
