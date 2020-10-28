@@ -33,4 +33,7 @@ Route::group([
     // 商品类目管理
     $router->resource('categories', 'CategoryController');
     $router->get('api/categories', 'CategoryController@apiIndex');
+
+    // 众筹商品
+    $router->resource('crowdfunding_products','CrowdfundingProductController');
 });

@@ -22,12 +22,12 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection require_dev
      * @property Grid\Column|Collection image
      * @property Grid\Column|Collection id
+     * @property Grid\Column|Collection created_at
+     * @property Grid\Column|Collection updated_at
      * @property Grid\Column|Collection parent_id
      * @property Grid\Column|Collection order
      * @property Grid\Column|Collection icon
      * @property Grid\Column|Collection uri
-     * @property Grid\Column|Collection created_at
-     * @property Grid\Column|Collection updated_at
      * @property Grid\Column|Collection user_id
      * @property Grid\Column|Collection path
      * @property Grid\Column|Collection method
@@ -45,6 +45,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection remember_token
      * @property Grid\Column|Collection product_sku_id
      * @property Grid\Column|Collection amount
+     * @property Grid\Column|Collection displayorder
      * @property Grid\Column|Collection is_directory
      * @property Grid\Column|Collection level
      * @property Grid\Column|Collection code
@@ -56,20 +57,23 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection start_time
      * @property Grid\Column|Collection end_time
      * @property Grid\Column|Collection status
+     * @property Grid\Column|Collection product_id
+     * @property Grid\Column|Collection target_amount
+     * @property Grid\Column|Collection total_amount
+     * @property Grid\Column|Collection user_count
+     * @property Grid\Column|Collection end_at
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
      * @property Grid\Column|Collection exception
      * @property Grid\Column|Collection failed_at
      * @property Grid\Column|Collection order_id
-     * @property Grid\Column|Collection product_id
      * @property Grid\Column|Collection price
      * @property Grid\Column|Collection rating
      * @property Grid\Column|Collection review
      * @property Grid\Column|Collection reviewed_at
      * @property Grid\Column|Collection no
      * @property Grid\Column|Collection address
-     * @property Grid\Column|Collection total_amount
      * @property Grid\Column|Collection remark
      * @property Grid\Column|Collection paid_at
      * @property Grid\Column|Collection coupon_code_id
@@ -108,12 +112,12 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection require_dev(string $label = null)
      * @method Grid\Column|Collection image(string $label = null)
      * @method Grid\Column|Collection id(string $label = null)
+     * @method Grid\Column|Collection created_at(string $label = null)
+     * @method Grid\Column|Collection updated_at(string $label = null)
      * @method Grid\Column|Collection parent_id(string $label = null)
      * @method Grid\Column|Collection order(string $label = null)
      * @method Grid\Column|Collection icon(string $label = null)
      * @method Grid\Column|Collection uri(string $label = null)
-     * @method Grid\Column|Collection created_at(string $label = null)
-     * @method Grid\Column|Collection updated_at(string $label = null)
      * @method Grid\Column|Collection user_id(string $label = null)
      * @method Grid\Column|Collection path(string $label = null)
      * @method Grid\Column|Collection method(string $label = null)
@@ -131,6 +135,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection remember_token(string $label = null)
      * @method Grid\Column|Collection product_sku_id(string $label = null)
      * @method Grid\Column|Collection amount(string $label = null)
+     * @method Grid\Column|Collection displayorder(string $label = null)
      * @method Grid\Column|Collection is_directory(string $label = null)
      * @method Grid\Column|Collection level(string $label = null)
      * @method Grid\Column|Collection code(string $label = null)
@@ -142,20 +147,23 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection start_time(string $label = null)
      * @method Grid\Column|Collection end_time(string $label = null)
      * @method Grid\Column|Collection status(string $label = null)
+     * @method Grid\Column|Collection product_id(string $label = null)
+     * @method Grid\Column|Collection target_amount(string $label = null)
+     * @method Grid\Column|Collection total_amount(string $label = null)
+     * @method Grid\Column|Collection user_count(string $label = null)
+     * @method Grid\Column|Collection end_at(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
      * @method Grid\Column|Collection exception(string $label = null)
      * @method Grid\Column|Collection failed_at(string $label = null)
      * @method Grid\Column|Collection order_id(string $label = null)
-     * @method Grid\Column|Collection product_id(string $label = null)
      * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection rating(string $label = null)
      * @method Grid\Column|Collection review(string $label = null)
      * @method Grid\Column|Collection reviewed_at(string $label = null)
      * @method Grid\Column|Collection no(string $label = null)
      * @method Grid\Column|Collection address(string $label = null)
-     * @method Grid\Column|Collection total_amount(string $label = null)
      * @method Grid\Column|Collection remark(string $label = null)
      * @method Grid\Column|Collection paid_at(string $label = null)
      * @method Grid\Column|Collection coupon_code_id(string $label = null)
@@ -199,12 +207,12 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection require_dev
      * @property Show\Field|Collection image
      * @property Show\Field|Collection id
+     * @property Show\Field|Collection created_at
+     * @property Show\Field|Collection updated_at
      * @property Show\Field|Collection parent_id
      * @property Show\Field|Collection order
      * @property Show\Field|Collection icon
      * @property Show\Field|Collection uri
-     * @property Show\Field|Collection created_at
-     * @property Show\Field|Collection updated_at
      * @property Show\Field|Collection user_id
      * @property Show\Field|Collection path
      * @property Show\Field|Collection method
@@ -222,6 +230,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection remember_token
      * @property Show\Field|Collection product_sku_id
      * @property Show\Field|Collection amount
+     * @property Show\Field|Collection displayorder
      * @property Show\Field|Collection is_directory
      * @property Show\Field|Collection level
      * @property Show\Field|Collection code
@@ -233,20 +242,23 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection start_time
      * @property Show\Field|Collection end_time
      * @property Show\Field|Collection status
+     * @property Show\Field|Collection product_id
+     * @property Show\Field|Collection target_amount
+     * @property Show\Field|Collection total_amount
+     * @property Show\Field|Collection user_count
+     * @property Show\Field|Collection end_at
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
      * @property Show\Field|Collection exception
      * @property Show\Field|Collection failed_at
      * @property Show\Field|Collection order_id
-     * @property Show\Field|Collection product_id
      * @property Show\Field|Collection price
      * @property Show\Field|Collection rating
      * @property Show\Field|Collection review
      * @property Show\Field|Collection reviewed_at
      * @property Show\Field|Collection no
      * @property Show\Field|Collection address
-     * @property Show\Field|Collection total_amount
      * @property Show\Field|Collection remark
      * @property Show\Field|Collection paid_at
      * @property Show\Field|Collection coupon_code_id
@@ -285,12 +297,12 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection require_dev(string $label = null)
      * @method Show\Field|Collection image(string $label = null)
      * @method Show\Field|Collection id(string $label = null)
+     * @method Show\Field|Collection created_at(string $label = null)
+     * @method Show\Field|Collection updated_at(string $label = null)
      * @method Show\Field|Collection parent_id(string $label = null)
      * @method Show\Field|Collection order(string $label = null)
      * @method Show\Field|Collection icon(string $label = null)
      * @method Show\Field|Collection uri(string $label = null)
-     * @method Show\Field|Collection created_at(string $label = null)
-     * @method Show\Field|Collection updated_at(string $label = null)
      * @method Show\Field|Collection user_id(string $label = null)
      * @method Show\Field|Collection path(string $label = null)
      * @method Show\Field|Collection method(string $label = null)
@@ -308,6 +320,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection remember_token(string $label = null)
      * @method Show\Field|Collection product_sku_id(string $label = null)
      * @method Show\Field|Collection amount(string $label = null)
+     * @method Show\Field|Collection displayorder(string $label = null)
      * @method Show\Field|Collection is_directory(string $label = null)
      * @method Show\Field|Collection level(string $label = null)
      * @method Show\Field|Collection code(string $label = null)
@@ -319,20 +332,23 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection start_time(string $label = null)
      * @method Show\Field|Collection end_time(string $label = null)
      * @method Show\Field|Collection status(string $label = null)
+     * @method Show\Field|Collection product_id(string $label = null)
+     * @method Show\Field|Collection target_amount(string $label = null)
+     * @method Show\Field|Collection total_amount(string $label = null)
+     * @method Show\Field|Collection user_count(string $label = null)
+     * @method Show\Field|Collection end_at(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)
      * @method Show\Field|Collection exception(string $label = null)
      * @method Show\Field|Collection failed_at(string $label = null)
      * @method Show\Field|Collection order_id(string $label = null)
-     * @method Show\Field|Collection product_id(string $label = null)
      * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection rating(string $label = null)
      * @method Show\Field|Collection review(string $label = null)
      * @method Show\Field|Collection reviewed_at(string $label = null)
      * @method Show\Field|Collection no(string $label = null)
      * @method Show\Field|Collection address(string $label = null)
-     * @method Show\Field|Collection total_amount(string $label = null)
      * @method Show\Field|Collection remark(string $label = null)
      * @method Show\Field|Collection paid_at(string $label = null)
      * @method Show\Field|Collection coupon_code_id(string $label = null)

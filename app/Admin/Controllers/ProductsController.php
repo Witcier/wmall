@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Product;
 use App\Models\Category;
+use App\Models\Product as AppProduct;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -21,7 +22,7 @@ class ProductsController extends AdminController
         return Grid::make(new Product(), function (Grid $grid) {
             $grid->model()->orderBy('updated_at', 'desc');
             // 使用 with 来预加载商品类目数据，减少 SQL 查询
-            $grid->model()->with(['category']);
+            $grid->model()->where('type', AppProduct::TYPE_NORMAL)->with(['category']);
             
             $grid->column('id')->sortable();
             $grid->column('title')->filter(
@@ -70,6 +71,10 @@ class ProductsController extends AdminController
     protected function form()
     {
         return Form::make(new Product('skus'), function (Form $form) {
+
+            // 隐藏字段 type
+            $form->hidden('type')->value(AppProduct::TYPE_NORMAL);
+            
             $form->text('title')->rules('required');
             $form->image('image')->rules('required|image');
 
