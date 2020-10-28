@@ -42,4 +42,9 @@ class CrowdfundingProduct extends Model
 
         return floatval(number_format($value * 100, 2, '.', ''));
     }
+
+    public function getCrowdfundedAttribute()
+    {
+        return "{$this->total_amount} / {$this->target_amount}";
+    }
 }
