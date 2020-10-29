@@ -60,6 +60,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 优惠卷检测
     Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
+
+    // 众筹商品下单
+    Route::post('crowdfunding_orders','OrdersController@crowdfunding')->name('crowdfunding_orders.store');
 });
 
 //商品详情
