@@ -191,6 +191,10 @@ class OrderController extends AdminController
         if (!$order->paid_at) {
             throw new InvalidRequestException('该订单未付款');
         }
+        // 众筹订单只有众筹成功才能发货
+        if ($order->type === AppOrder::TYPE_CROWDFUNDING && $order->items[0]->product->crowdfunding->status !== CrowdfundingProduct::STATUS_SUCCESS) {
+            throw new InvalidRequestException('众筹订单只能在众筹成功之后发货');
+        }
         // 判断订单是否已经发货
         if ($order->ship_status !== Order::SHIP_STATUS_PENDING) {
             throw new InvalidRequestException('该订单已发货');

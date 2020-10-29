@@ -20,6 +20,9 @@ class Order extends Model
     const PAYMENT_METHOD_WECHAT = 'wechat';
     const PAYMENT_METHOD_ALIPAY = 'alipay';
 
+    const TYPE_NORMAL = 'normal';
+    const TYPE_CROWDFUNDING = 'crowdfunding';
+
     public static $refundStatusMap = [
         self::REFUND_STATUS_PENDING => '未退款',
         self::REFUND_STATUS_APPLIED => '已申请退款',
@@ -39,7 +42,13 @@ class Order extends Model
         self::PAYMENT_METHOD_ALIPAY => '支付宝支付',
     ];
 
+    public static $typeMap = [
+        self::TYPE_NORMAL => '普通商品订单',
+        self::TYPE_CROWDFUNDING => '众筹商品订单',
+    ];
+
     protected $fillable = [
+        'type',
         'no',
         'address',
         'total_amount',
