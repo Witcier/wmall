@@ -7,8 +7,10 @@ use App\Exceptions\InternalException;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Requests\Admin\HandleRefundRequest;
 use App\Http\Requests\Request;
+use App\Models\CrowdfundingProduct;
 use App\Models\Order as AppOrder;
 use App\Models\User;
+use App\Services\OrderService;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -126,7 +128,7 @@ class OrderController extends AdminController
                 }
                 return $rows;
             })->filename('Witcier Mall订单'.Carbon::now());
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id')->width(3);
                 $filter->like('user.name','买家')->width(3);
@@ -145,14 +147,14 @@ class OrderController extends AdminController
                         [2000, 4999],
                         [5000,10000000],
                     ];
-                
+
                     $value = current($value);
                     $query->whereBetween('total_amount', $between[$value]);
                 });
             });
 
             $grid->toolsWithOutline(false);
-            
+
             $grid->filter(function (Grid\Filter $filter) {
                 // 更改为 panel 布局
                 $filter->panel();
@@ -217,7 +219,7 @@ class OrderController extends AdminController
         return redirect()->back();
     }
 
-    public function handleRefund(AppOrder $order, HandleRefundRequest $request)
+    public function handleRefund(AppOrder $order, HandleRefundRequest $request, OrderService $orderService)
     {
         // 判断订单状态是否正确
         if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
@@ -232,11 +234,11 @@ class OrderController extends AdminController
         //    $order->update([
         //        'extra' => $extra,
         //    ]);
-           $this->_refundOrder($order);
+           $orderService->refundOrder($order);
         } else {
             // 将拒绝退款的理由放到订单的 extra 字段
             $extra = $order->extre ?: [];
-            $extra['refund_disagree_reason'] = $request->input('reason'); 
+            $extra['refund_disagree_reason'] = $request->input('reason');
 
             // 将订单的退款状态改为未退款
             $order->update([
@@ -246,61 +248,5 @@ class OrderController extends AdminController
         }
 
         return $order;
-    }
-
-    protected function _refundOrder(AppOrder $order)
-    {
-        // 判断该订单的支付方式
-        switch ($order->payment_method) {
-            case 'wechat':
-                // 生成退款订单号
-                $refundNo = AppOrder::getAvailableRefundNo();
-                app('wechat_pay')->refund([
-                    'out_trade_no' => $order->no,
-                    'total_fee' => $order->total_amount * 100,
-                    'refund_fee' => $order->total_amount * 100,
-                    'out_refund_no' => $refundNo,
-                    // 微信支付的退款结果并不是实时返回的，而是通过退款回调来通知，因此这里需要配上退款回调接口地址
-                    // 'notify_url' => route('payment.wechat.refund_notify'),
-                    'notify_url' => ngrok_url('payment.wechat.refund_notify'),
-                ]);
-                // 将订单的退款状态该为退款中
-                $order->update([
-                    'refund_no' => $refundNo,
-                    'refund_status' => Order::REFUND_STATUS_PROCESSING,
-                ]);
-                break;
-            case 'alipay':
-                // 生成退款订单号
-                $refundNo = AppOrder::getAvailableRefundNo();
-                // 调用支付宝的支付实例的 refund 方法
-                $ret = app('alipay')->refund([
-                    'out_trade_no' => $order->no,
-                    'refund_amount' => $order->total_amount,
-                    'out_request_no' => $refundNo,
-                ]);
-                 // 根据支付宝的文档，如果返回值里有 sub_code 字段说明退款失败
-                 if ($ret->sub_code) {
-                     // 将退款失败的保存存入 extra 字段
-                     $extra = $order->extra;
-                     $extra['refund_failed_code'] = $ret->sub_code;
-                     // 将订单的退款状态标记为退款失败
-                     $order->update([
-                         'refund_no' => $refundNo,
-                         'refund_status' => AppOrder::REFUND_STATUS_FAILED,
-                         'extra' => $extra,
-                     ]);
-                 } else {
-                     // 将订单的退款状态标记为退款成功
-                     $order->update([
-                         'refund_no' => $refundNo,
-                         'refund_status' => AppOrder::REFUND_STATUS_SUCCESS,
-                     ]);
-                 }
-                break;
-            default:
-                throw new InternalException('未知支付方式：'.$order->payment_method);
-                break;
-        }
     }
 }
