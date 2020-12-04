@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\CrowdfundingProduct;
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -42,7 +43,7 @@ class RefundCrowdfundingOrders implements ShouldQueue
         // 查看所有该众筹商品的订单
         Order::query()
             // 订单类型为众筹订单
-            ->where('status', Order::TYPE_CROWDFUNDING)
+            ->where('type', Order::TYPE_CROWDFUNDING)
             // 已经支付的订单
             ->whereNotNull('paid_at')
             ->whereHas('items', function ($query) {

@@ -67,7 +67,7 @@ class FinishCrowdfunding extends Command
             'status' => CrowdfundingProduct::STATUS_FAIL,
         ]);
 
-
+        dispatch(new RefundCrowdfundingOrders($crowdfunding));
     }
 
     protected function crowdfundingSuccessed(CrowdfundingProduct $crowdfunding)
@@ -76,7 +76,5 @@ class FinishCrowdfunding extends Command
         $crowdfunding->update([
             'status' => CrowdfundingProduct::STATUS_SUCCESS,
         ]);
-
-        dispatch(new RefundCrowdfundingOrders($crowdfunding));
     }
 }
