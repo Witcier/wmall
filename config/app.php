@@ -137,7 +137,7 @@ return [
     // 订单关闭时间设置(单位：秒)
     'order_ttl' => 1800,
 
-    // NGROK
+    // NGROK 内网穿透
     'ngrok_url' => env('NGROK_URL'),
 
     'providers' => [

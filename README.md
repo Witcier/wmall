@@ -19,11 +19,13 @@
 * `composer install`  
 * `yarn install`
 * 运行 `npm run watch-poll` 编译app.scss文件
-* `php artisan migrate`生成数据库文件    
+* `php artisan migrate:refresh --seed`生成数据库文件    
 * `php artisan key:gen`
 * 在 linux 服务器下需要获取权限
 * `chmod -R 777 storage/`
 * `php artisan storage:link`
+* 消息队列开启
+* `php artisan queue:work`
 * 访问'你的域名'即为主页面  
 * '你的域名/admin'为后台入口。
 * 主管理员账号和密码 admin admin
