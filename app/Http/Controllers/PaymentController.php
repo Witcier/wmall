@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Events\OrderPaid;
 use App\Exceptions\InvalidRequestException;
+use App\Models\Installment;
 use App\Models\Order;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PaymentController extends Controller
 {
@@ -157,5 +159,79 @@ class PaymentController extends Controller
         }
 
         return app('wechat_pay')->success();
+    }
+
+    public function payByInstallment(Order $order, Request $request)
+    {
+        // 判断订单是否属于当前用户
+        $this->authorize('own', $order);
+
+        // 判断订单是否支付或者已被关闭
+        if ($order->paid_at || $order->closed) {
+            throw new InvalidRequestException('订单状态异常');
+        }
+
+        // 订单不满足最低分期要求
+        if ($order->total_amount < config('app.min_installment_amount')) {
+            throw new InvalidRequestException('订单金额低于最低分期金额'.config('app.min_installment_amount'));
+        }
+
+        // 校验用户的提交还款月数，数值必须是设置好利率的期数
+        $this->validate($request, [
+            'count' => ['required', Rule::in(array_keys(config('app.installment_fee_rate')))]
+        ]);
+
+        // 删除同一笔商品订单发起过其他的状态是未支付的分期付款，避免一笔订单有多个分期
+        Installment::query()
+            ->where('order_id', $order->id)
+            ->where('status', Installment::STATUS_REPAYING)
+            ->delete();
+
+        $count = $request->input('count');
+
+        // 创建一个新的分期付款对象
+        $installment = new Installment([
+            // 总金额为订单商品的总金额
+            'total_amount' => $order->total_amount,
+            // 分期期数
+            'count' => $count,
+            // 从配置文件获取相应期数的利率
+            'fee_rate' => config('app.installment_fee_rate')[$count],
+            // 从配置获取逾期的利率
+            'fine_rate' => config('app.installment_fine_rate'),
+        ]);
+
+        $installment->user()->associate($request->user());
+        $installment->order()->associate($order);
+        $installment->save();
+
+        // 第一期的还款日期
+        $dueDate = Carbon::tomorrow();
+
+        // 计算每一期的本金
+        $base = big_number($order->total_amount)->divide($count)->getValue();
+        // 计算每一期的利息
+        $fee = big_number($base)->multiply($installment->fee_rate)->divide(100)->getValue();
+
+        // 根据用户选择的还款期数，创建相应的还款计划
+        for ($i = 0; $i  < $count; $i++) {
+            // 最后一期的本金需要用总本金减去前面几期的本金
+            if ($i === $count-1) {
+                $base = big_number($order->total_amount)->subtract(big_number($base)->multiply($count - 1));
+            }
+
+            $installment->items()->create([
+                'sequence' => $i,
+                'base' => $base,
+                'fee' => $fee,
+                'due_date' => $dueDate,
+            ]);
+
+            // 还款截止日期加 30 天
+            $dueDate = $dueDate->copy()->addDays(30);
+        }
+
+        return $installment;
+
     }
 }
