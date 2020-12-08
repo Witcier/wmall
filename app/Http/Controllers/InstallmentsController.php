@@ -6,6 +6,7 @@ use App\Events\OrderPaid;
 use App\Exceptions\InvalidRequestException;
 use App\Models\Installment;
 use Carbon\Carbon;
+use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
 
 class InstallmentsController extends Controller
@@ -81,9 +82,59 @@ class InstallmentsController extends Controller
             return app('alipay')->success();
         }
 
+        if ($this->paid($data->out_trade_no, 'alipay', $data->trade_no)) {
+            return app('alipay')->success();
+        }
+
+        return 'fail';
+    }
+
+    public function payByWechat(Installment $installment)
+    {
+        if ($installment->order->close) {
+            throw new InvalidRequestException('对应的商品订单已关闭');
+        }
+
+        if ($installment->status === Installment::STATUS_FINISHED) {
+            throw new InvalidRequestException('该分期订单已经结清');
+        }
+
+          // 获取当前分期付款最近的一个未支付的还款计划
+          if (!$nextItem = $installment->items()->whereNull('paid_at')->orderBy('sequence')->first()) {
+            // 如果没有未支付的还款，原则上不可能，因为如果分期已结清则在上一个判断就退出了
+            throw new InvalidRequestException('该分期订单已结清');
+        }
+
+        $wechatOrder = app('wechat_pay')->scan([
+            'out_trade_no' => $installment->no.'_'.$nextItem->sequence,
+            'total_fee' => $nextItem->total,
+            'body' => '支付 Witcier Mall 的分期订单'.$installment->no,
+            'notify_url' => ngrok_url('installments.wechat.notify'),
+        ]);
+
+        // 把要转换的字符作为 QrCode 的构造函数参数
+        $qrCode = new QrCode($wechatOrder->code_url);
+
+        // 将生成的二维码图片以字符串形式输出， 并带上相应的类型
+        return response($qrCode->writeString(), 200, ['Content-Type' => $qrCode->getContentType()]);
+    }
+
+    public function wechatNotify()
+    {
+        $data = app('wechat_pay')->verify();
+
+        if ($this->paid($data->out_trade_no, 'wechat', $data->transaction_id)) {
+            return app('wechat_pay')->success();
+        }
+
+        return 'fail';
+    }
+
+    public function paid($outTradeNo, $paymentMethod, $paymentNo)
+    {
         // 拉起支付时使用的支付订单号是由分期流水号 + 还款计划编号组成的
         // 因此可以通过支付订单号来还原出这笔还款是哪个分期付款的哪个还款计划
-        list($no, $sequence) = explode('_', $data->out_trade_no);
+        list($no, $sequence) = explode('_', $outTradeNo);
 
         // 根据分期流水号查询对应的分期记录
         if (!$installment = Installment::where('no', $no)->first()) {
@@ -97,16 +148,16 @@ class InstallmentsController extends Controller
 
         // 判断该计划是否已支付
         if ($item->paid_at) {
-            return app('alipay')->success();
+            return true;
         }
 
         // 开启事务保持数据一致性
-        \DB::transaction(function () use ($data, $no, $installment, $item) {
+        \DB::transaction(function () use ($paymentNo, $paymentMethod, $no, $installment, $item) {
             // 更新相应的计划
             $item->update([
                 'paid_at' => Carbon::now(),
-                'payment_method' => 'alipay',
-                'payment_no' => $data->trade_no,
+                'payment_method' => $paymentMethod,
+                'payment_no' => $paymentNo,
             ]);
 
             // 如果是第一笔还款
@@ -133,6 +184,6 @@ class InstallmentsController extends Controller
             }
         });
 
-        return app('alipay')->success();
+        return true;
     }
 }
