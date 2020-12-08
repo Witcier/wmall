@@ -72,6 +72,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 分期返款详情
     Route::get('installments/{installment}','InstallmentsController@show')->name('installments.show');
+
+    // 分期付款
+    Route::get('installments/{installment}/alipay','InstallmentsController@payByAlipay')->name('installments.alipay');
+
+    // 分期付款前端回调
+    Route::get('installments/alipay/return','InstallmentsController@alipayReturn')->name('installments.alipay.return');
 });
 
 //商品详情
@@ -81,3 +87,4 @@ Route::get('products/{product}','ProductsController@show')->name('products.show'
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
 Route::post('payment/wechat/notify', 'PaymentController@wechatNotify')->name('payment.wechat.notify');
 Route::post('payment/wechat/refund_notify', 'PaymentController@wechatRefundNotify')->name('payment.wechat.refund_notify');
+Route::post('installments/alipay/notify', 'InstallmentsController@alipayNotify')->name('installments.alipay.notify');

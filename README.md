@@ -29,6 +29,6 @@
 * 访问'你的域名'即为主页面  
 * '你的域名/admin'为后台入口。
 * 主管理员账号和密码 admin admin
-
+* ngrok http -host-header=shop.test -region us 80
 
 

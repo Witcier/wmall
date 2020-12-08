@@ -109,10 +109,15 @@ class Order extends Model
         return $this->belongsTo(CouponCode::class);
     }
 
+    public function installments()
+    {
+        return $this->hasMany(Installment::class);
+    }
+
     public static function findAvailableNo()
     {
         $prefix = 'WE'.date('YmdHis');
-        for ($i=0; $i < 10; $i++) { 
+        for ($i=0; $i < 10; $i++) {
            // 随机生成 10 位的数字
            $no = $prefix.str_pad(random_int(0,9999999999),10,'0',STR_PAD_LEFT);
            // 判断是否存

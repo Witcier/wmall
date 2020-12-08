@@ -176,6 +176,11 @@ class PaymentController extends Controller
             throw new InvalidRequestException('订单金额低于最低分期金额'.config('app.min_installment_amount'));
         }
 
+        // 判断订单是否已经创建分期付款
+        if ($installment = Installment::where('order_id', $order->id)->first()) {
+            throw new InvalidRequestException('该订单已经创建分期付款了');
+        }
+
         // 校验用户的提交还款月数，数值必须是设置好利率的期数
         $this->validate($request, [
             'count' => ['required', Rule::in(array_keys(config('app.installment_fee_rate')))]
@@ -184,7 +189,7 @@ class PaymentController extends Controller
         // 删除同一笔商品订单发起过其他的状态是未支付的分期付款，避免一笔订单有多个分期
         Installment::query()
             ->where('order_id', $order->id)
-            ->where('status', Installment::STATUS_REPAYING)
+            ->where('status', Installment::STATUS_PENDING)
             ->delete();
 
         $count = $request->input('count');
