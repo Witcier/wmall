@@ -56,6 +56,7 @@ abstract class CommonProductController extends AdminController
             $form->hidden('type')->value($this->getProductType());
 
             $form->text('title')->rules('required');
+            $form->text('long_title')->rules('required');
             $form->image('image')->rules('required|image');
 
             // 添加一个分类字段， 与之前的分类管理类似， 使用ajax的方式来添加搜索

@@ -1,10 +1,11 @@
-<?php 
+<?php
 return [
     'labels' => [
         'Products' => '商品',
     ],
     'fields' => [
         'title' => '标题',
+        'long_title' => '商品长标题',
         'description' => '描述',
         'image' => '图片',
         'status' => '是否上架',
