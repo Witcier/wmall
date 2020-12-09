@@ -26,6 +26,7 @@ class Order extends EloquentRepository
 
     const PAYMENT_METHOD_WECHAT = 'wechat';
     const PAYMENT_METHOD_ALIPAY = 'alipay';
+    const PAYMENT_METHOD_INSTALLMENT = 'installment';
 
     public static $refundStatusMap = [
         self::REFUND_STATUS_PENDING => '未退款',
@@ -44,5 +45,6 @@ class Order extends EloquentRepository
     public static $paymentMethodMap = [
         self::PAYMENT_METHOD_WECHAT => '微信支付',
         self::PAYMENT_METHOD_ALIPAY => '支付宝支付',
+        self::PAYMENT_METHOD_INSTALLMENT => '分期付款',
     ];
 }

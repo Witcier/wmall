@@ -44,11 +44,25 @@ class OrderController extends AdminController
                 Grid\Column\Filter\Between::make()
             );
             $grid->column('payment_method')->display( function ($value) {
-                return $value === 'alipay' ? '支付宝支付' : ($value === 'alipay' ? '微信支付' : '未支付');
+                switch ($value) {
+                    case 'alipay':
+                        return '支付宝支付';
+                        break;
+                    case 'wechat':
+                        return '微信支付';
+                        break;
+                    case 'installment':
+                        return '分期付款';
+                        break;
+                    default:
+                        return '未支付';
+                        break;
+                }
             })->label('success')->filter(
                 Grid\Column\Filter\In::make([
                     'wechat' => '微信支付',
                     'alipay'  => '支付宝支付',
+                    'installment' => '分期付款',
                 ])
             );
             $grid->column('closed')->display(function ($value) {
@@ -137,7 +151,7 @@ class OrderController extends AdminController
             // $grid->quickSearch('user.name','')->placeholder('快速搜索...');
 
             $grid->selector(function (Grid\Tools\Selector $selector) {
-                $selector->selectOne('payment_method', '支付方式', ['alipay' => '支付宝支付', 'wechat' => '微信支付']);
+                $selector->selectOne('payment_method', '支付方式', ['alipay' => '支付宝支付', 'wechat' => '微信支付', 'installment' => '分期付款']);
                 $selector->selectOne('closed', '订单关闭', [1 => '是', 0 => '否']);
                 $selector->selectOne('ship_status', '物流状态', ['pending' => '未发货', 'delivered' => '已发货', 'received' => '已收货']);
                 $selector->selectOne('total_amount', '订单金额', ['0-599', '600-1999', '1999-4999', '5000+'], function ($query, $value) {

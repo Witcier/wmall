@@ -7,6 +7,7 @@ use App\Exceptions\CouponCodeUnavailableException;
 use App\Exceptions\InternalException;
 use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
+use App\Jobs\RefundInstallmentOrder;
 use App\Models\CouponCode;
 use App\Models\Order;
 use App\Models\ProductSku;
@@ -229,6 +230,15 @@ class OrderService
                             'refund_status' => Order::REFUND_STATUS_SUCCESS,
                         ]);
                     }
+                break;
+            case 'installment':
+                $order->update([
+                    'refund_no' => Order::getAvailableRefundNo(),
+                    'refund_status' => Order::REFUND_STATUS_PROCESSING,
+                ]);
+
+                // 触发退款异步任务
+                dispatch(new RefundInstallmentOrder($order));
                 break;
             default:
                 throw new InternalException('未知支付方式：'.$order->payment_method);
