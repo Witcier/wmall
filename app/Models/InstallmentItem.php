@@ -39,7 +39,7 @@ class InstallmentItem extends Model
 
     public function installment()
     {
-        return $this->belongsTo(InstallmentItem::class);
+        return $this->belongsTo(Installment::class);
     }
 
     // 创建一个访问器，返回当前还款计划的总金额
