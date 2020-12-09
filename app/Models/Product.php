@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Arr;
 
 class Product extends Model
 {
@@ -72,5 +73,47 @@ class Product extends Model
     public function properties()
     {
         return $this->hasMany(ProductProperty::class);
+    }
+
+    public function toEsArray()
+    {
+        // 只取出需要的字段
+        $arr = Arr::only($this->toArray(), [
+            'id',
+            'type',
+            'title',
+            'category_id',
+            'long_title',
+            'status',
+            'rating',
+            'sold_count',
+            'review_count',
+            'price',
+        ]);
+
+        // 如果商品有分类， 则 category 字段为分类名数组，否则为空字符串
+        $arr['category'] = $this->category ? explode(' - ', $this->category->full_name) : '';
+        // 分类的 path 路径
+        $arr['category_path'] = $this->category ? $this->category->path : '';
+        // strip_tags 函数可以将 html 标签去除
+        $arr['description'] = strip_tags($this->description);
+        // 只取出需要的 sku 字段
+        $arr['skus'] = $this->skus->map(function (ProductSku $sku) {
+            return Arr::only($sku->toArray(),[
+                'title',
+                'description',
+                'price',
+            ]);
+        });
+
+        // 只取出需要的商品属性
+        $arr['properties'] = $this->properties->map(function (ProductProperty $property) {
+            return Arr::only($property->toArray(), [
+                'name',
+                'value',
+            ]);
+        });
+
+        return $arr;
     }
 }
