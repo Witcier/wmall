@@ -49,7 +49,7 @@
           <div class="sales_and_reviews">
             <div class="sold_count">累计销量 <span class="count">{{ $product->sold_count }}</span></div>
             <div class="review_count">累计评价 <span class="count">{{ $product->review_count }}</span></div>
-            <div class="rating" title="评分 {{ $product->rating }}">评分 
+            <div class="rating" title="评分 {{ $product->rating }}">评分
               <span class="count">{{ str_repeat('★', floor($product->rating)) }}{{ str_repeat('☆', 5 - floor($product->rating)) }}</span>
             </div>
           </div>
@@ -60,12 +60,12 @@
           <label>选择</label>
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
             @foreach($product->skus as $sku)
-              <label 
+              <label
                class="btn sku-btn"
                data-price="{{ $sku->price }}"
                data-stock="{{ $sku->stock }}"
                data-toggle="tooltip"
-               title="{{ $sku->description }}" 
+               title="{{ $sku->description }}"
                data-placement="bottom">
                 <input type="radio" name="skus" autocomplete="off" value="{{ $sku->id }}"> {{ $sku->title }}
               </label>
@@ -110,7 +110,20 @@
       </ul>
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="product-detail-tab">
-          {!! $product->description !!}
+        <!-- 产品属性开始 -->
+        <div class="properties-list">
+            <div class="properties-list-title">产品参数：</div>
+                <ul class="properties-list-body">
+                    @foreach($product->grouped_properties as $name => $values)
+                    <li>{{ $name }}：{{ join(' ', $values) }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            <!-- 产品属性结束 -->
+            <!-- 在商品描述外面包了一层 div -->
+            <div class="product-description">
+                {!! $product->description !!}
+            </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="product-reviews-tab">
           <!-- 评论列表开始 -->

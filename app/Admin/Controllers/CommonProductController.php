@@ -40,7 +40,7 @@ abstract class CommonProductController extends AdminController
             });
 
             $grid->toolsWithOutline(false);
-            
+
             $grid->filter(function (Grid\Filter $filter) {
                 // 更改为 panel 布局
                 $filter->panel();
@@ -50,7 +50,7 @@ abstract class CommonProductController extends AdminController
 
     protected function form()
     {
-        return Form::make(new Product('skus'), function (Form $form) {
+        return Form::make(new Product(['skus','properties']), function (Form $form) {
 
             // 隐藏字段 type
             $form->hidden('type')->value($this->getProductType());
@@ -79,8 +79,13 @@ abstract class CommonProductController extends AdminController
                 $form->text('stock','库存')->rules('required|integer|min:0');
             });
 
+            $form->hasMany('properties', '商品属性', function (Form\NestedForm $form) {
+                $form->text('name', '标题')->rules('required');
+                $form->text('value', '属性')->rules('required');
+            });
+
             $form->saving(function (Form $form) {
-                $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ?: 0; 
+                $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ?: 0;
             });
 
             $form->disableViewButton();
