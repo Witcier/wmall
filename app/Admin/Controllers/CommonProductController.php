@@ -94,7 +94,7 @@ abstract class CommonProductController extends AdminController
                 if ($form->isCreating()) {
                     $id = $form->getKey();
                 } else {
-                    $id = $form->id;
+                    $id = $form->model()->id;
                 }
                 $product = AppProduct::where('id', $id)->first();
                 dispatch(new SyncOneProductToES($product));

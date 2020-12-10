@@ -91,6 +91,7 @@
         </div>
       @endforeach
     </div>
+    {{-- <div class="float-right">{{ $products->appends($filters)->render() }}</div> --}}
     <div class="float-right">{{ $products->appends($filters)->render() }}</div>
   </div>
 </div>
