@@ -75,7 +75,7 @@ class Product extends Model
         return $this->hasMany(ProductProperty::class);
     }
 
-    public function toEsArray()
+    public function toESArray()
     {
         // 只取出需要的字段
         $arr = Arr::only($this->toArray(), [

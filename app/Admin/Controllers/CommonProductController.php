@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Product;
+use App\Jobs\SyncOneProductToES;
 use App\Models\Category;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
@@ -57,7 +58,7 @@ abstract class CommonProductController extends AdminController
 
             $form->text('title')->rules('required');
             $form->text('long_title')->rules('required');
-            $form->image('image')->rules('required|image');
+            $form->image('image')->autoUpload()->rules('required|image');
 
             // 添加一个分类字段， 与之前的分类管理类似， 使用ajax的方式来添加搜索
             $form->select('category_id','分类')->options(function ($id) {
@@ -87,6 +88,16 @@ abstract class CommonProductController extends AdminController
 
             $form->saving(function (Form $form) {
                 $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ?: 0;
+            });
+
+            $form->saved(function (Form $form) {
+                if ($form->isCreating()) {
+                    $id = $form->getKey();
+                } else {
+                    $id = $form->id;
+                }
+                $product = AppProduct::where('id', $id)->first();
+                dispatch(new SyncOneProductToES($product));
             });
 
             $form->disableViewButton();
