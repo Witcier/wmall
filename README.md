@@ -30,7 +30,9 @@
 * '你的域名/admin'为后台入口。
 * 主管理员账号和密码 admin admin
 * ngrok http -host-header=shop.test -region us 80
-* git config core.autocrlf false
+* git config core.autocrlf false -g
+* sudo systemctl restart elasticsearch.service
+* sudo systemctl disable elasticsearch.service
 
 
 
