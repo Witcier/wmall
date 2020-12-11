@@ -12,7 +12,7 @@ class SyncProducts extends Command
      *
      * @var string
      */
-    protected $signature = 'es:sync-products';
+    protected $signature = 'es:sync-products {--index=products}';
 
     /**
      * The console command description.
@@ -38,7 +38,7 @@ class SyncProducts extends Command
      */
     public function handle()
     {
-        // 获取 Elasticseaech 对象
+        // 获取 Elasticsearch 对象
         $es = app('es');
 
         Product::query()
@@ -58,7 +58,8 @@ class SyncProducts extends Command
 
                     $req['body'][] = [
                         'index' => [
-                            '_index' => 'products',
+                            // 从参数中读取索引名称
+                            '_index' => $this->option('index'),
                             '_id' => $data['id'],
                         ],
                     ];
