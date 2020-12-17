@@ -36,4 +36,7 @@ Route::group([
 
     // 众筹商品
     $router->resource('crowdfunding_products','CrowdfundingProductController');
+
+    // 秒杀商品
+    $router->resource('seckill_products', 'SeckillProductController');
 });

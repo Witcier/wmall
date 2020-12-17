@@ -67,19 +67,28 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection payload
      * @property Grid\Column|Collection exception
      * @property Grid\Column|Collection failed_at
+     * @property Grid\Column|Collection installment_id
+     * @property Grid\Column|Collection sequence
+     * @property Grid\Column|Collection base
+     * @property Grid\Column|Collection fee
+     * @property Grid\Column|Collection fine
+     * @property Grid\Column|Collection due_date
+     * @property Grid\Column|Collection paid_at
+     * @property Grid\Column|Collection payment_method
+     * @property Grid\Column|Collection payment_no
+     * @property Grid\Column|Collection refund_status
+     * @property Grid\Column|Collection no
      * @property Grid\Column|Collection order_id
+     * @property Grid\Column|Collection count
+     * @property Grid\Column|Collection fee_rate
+     * @property Grid\Column|Collection fine_rate
      * @property Grid\Column|Collection price
      * @property Grid\Column|Collection rating
      * @property Grid\Column|Collection review
      * @property Grid\Column|Collection reviewed_at
-     * @property Grid\Column|Collection no
      * @property Grid\Column|Collection address
      * @property Grid\Column|Collection remark
-     * @property Grid\Column|Collection paid_at
      * @property Grid\Column|Collection coupon_code_id
-     * @property Grid\Column|Collection payment_method
-     * @property Grid\Column|Collection payment_no
-     * @property Grid\Column|Collection refund_status
      * @property Grid\Column|Collection refund_no
      * @property Grid\Column|Collection closed
      * @property Grid\Column|Collection reviewed
@@ -90,8 +99,10 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection stock
      * @property Grid\Column|Collection category_id
+     * @property Grid\Column|Collection long_title
      * @property Grid\Column|Collection sold_count
      * @property Grid\Column|Collection review_count
+     * @property Grid\Column|Collection start_at
      * @property Grid\Column|Collection province
      * @property Grid\Column|Collection city
      * @property Grid\Column|Collection district
@@ -157,19 +168,28 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection payload(string $label = null)
      * @method Grid\Column|Collection exception(string $label = null)
      * @method Grid\Column|Collection failed_at(string $label = null)
+     * @method Grid\Column|Collection installment_id(string $label = null)
+     * @method Grid\Column|Collection sequence(string $label = null)
+     * @method Grid\Column|Collection base(string $label = null)
+     * @method Grid\Column|Collection fee(string $label = null)
+     * @method Grid\Column|Collection fine(string $label = null)
+     * @method Grid\Column|Collection due_date(string $label = null)
+     * @method Grid\Column|Collection paid_at(string $label = null)
+     * @method Grid\Column|Collection payment_method(string $label = null)
+     * @method Grid\Column|Collection payment_no(string $label = null)
+     * @method Grid\Column|Collection refund_status(string $label = null)
+     * @method Grid\Column|Collection no(string $label = null)
      * @method Grid\Column|Collection order_id(string $label = null)
+     * @method Grid\Column|Collection count(string $label = null)
+     * @method Grid\Column|Collection fee_rate(string $label = null)
+     * @method Grid\Column|Collection fine_rate(string $label = null)
      * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection rating(string $label = null)
      * @method Grid\Column|Collection review(string $label = null)
      * @method Grid\Column|Collection reviewed_at(string $label = null)
-     * @method Grid\Column|Collection no(string $label = null)
      * @method Grid\Column|Collection address(string $label = null)
      * @method Grid\Column|Collection remark(string $label = null)
-     * @method Grid\Column|Collection paid_at(string $label = null)
      * @method Grid\Column|Collection coupon_code_id(string $label = null)
-     * @method Grid\Column|Collection payment_method(string $label = null)
-     * @method Grid\Column|Collection payment_no(string $label = null)
-     * @method Grid\Column|Collection refund_status(string $label = null)
      * @method Grid\Column|Collection refund_no(string $label = null)
      * @method Grid\Column|Collection closed(string $label = null)
      * @method Grid\Column|Collection reviewed(string $label = null)
@@ -180,8 +200,10 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection stock(string $label = null)
      * @method Grid\Column|Collection category_id(string $label = null)
+     * @method Grid\Column|Collection long_title(string $label = null)
      * @method Grid\Column|Collection sold_count(string $label = null)
      * @method Grid\Column|Collection review_count(string $label = null)
+     * @method Grid\Column|Collection start_at(string $label = null)
      * @method Grid\Column|Collection province(string $label = null)
      * @method Grid\Column|Collection city(string $label = null)
      * @method Grid\Column|Collection district(string $label = null)
@@ -252,19 +274,28 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection payload
      * @property Show\Field|Collection exception
      * @property Show\Field|Collection failed_at
+     * @property Show\Field|Collection installment_id
+     * @property Show\Field|Collection sequence
+     * @property Show\Field|Collection base
+     * @property Show\Field|Collection fee
+     * @property Show\Field|Collection fine
+     * @property Show\Field|Collection due_date
+     * @property Show\Field|Collection paid_at
+     * @property Show\Field|Collection payment_method
+     * @property Show\Field|Collection payment_no
+     * @property Show\Field|Collection refund_status
+     * @property Show\Field|Collection no
      * @property Show\Field|Collection order_id
+     * @property Show\Field|Collection count
+     * @property Show\Field|Collection fee_rate
+     * @property Show\Field|Collection fine_rate
      * @property Show\Field|Collection price
      * @property Show\Field|Collection rating
      * @property Show\Field|Collection review
      * @property Show\Field|Collection reviewed_at
-     * @property Show\Field|Collection no
      * @property Show\Field|Collection address
      * @property Show\Field|Collection remark
-     * @property Show\Field|Collection paid_at
      * @property Show\Field|Collection coupon_code_id
-     * @property Show\Field|Collection payment_method
-     * @property Show\Field|Collection payment_no
-     * @property Show\Field|Collection refund_status
      * @property Show\Field|Collection refund_no
      * @property Show\Field|Collection closed
      * @property Show\Field|Collection reviewed
@@ -275,8 +306,10 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection token
      * @property Show\Field|Collection stock
      * @property Show\Field|Collection category_id
+     * @property Show\Field|Collection long_title
      * @property Show\Field|Collection sold_count
      * @property Show\Field|Collection review_count
+     * @property Show\Field|Collection start_at
      * @property Show\Field|Collection province
      * @property Show\Field|Collection city
      * @property Show\Field|Collection district
@@ -342,19 +375,28 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection payload(string $label = null)
      * @method Show\Field|Collection exception(string $label = null)
      * @method Show\Field|Collection failed_at(string $label = null)
+     * @method Show\Field|Collection installment_id(string $label = null)
+     * @method Show\Field|Collection sequence(string $label = null)
+     * @method Show\Field|Collection base(string $label = null)
+     * @method Show\Field|Collection fee(string $label = null)
+     * @method Show\Field|Collection fine(string $label = null)
+     * @method Show\Field|Collection due_date(string $label = null)
+     * @method Show\Field|Collection paid_at(string $label = null)
+     * @method Show\Field|Collection payment_method(string $label = null)
+     * @method Show\Field|Collection payment_no(string $label = null)
+     * @method Show\Field|Collection refund_status(string $label = null)
+     * @method Show\Field|Collection no(string $label = null)
      * @method Show\Field|Collection order_id(string $label = null)
+     * @method Show\Field|Collection count(string $label = null)
+     * @method Show\Field|Collection fee_rate(string $label = null)
+     * @method Show\Field|Collection fine_rate(string $label = null)
      * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection rating(string $label = null)
      * @method Show\Field|Collection review(string $label = null)
      * @method Show\Field|Collection reviewed_at(string $label = null)
-     * @method Show\Field|Collection no(string $label = null)
      * @method Show\Field|Collection address(string $label = null)
      * @method Show\Field|Collection remark(string $label = null)
-     * @method Show\Field|Collection paid_at(string $label = null)
      * @method Show\Field|Collection coupon_code_id(string $label = null)
-     * @method Show\Field|Collection payment_method(string $label = null)
-     * @method Show\Field|Collection payment_no(string $label = null)
-     * @method Show\Field|Collection refund_status(string $label = null)
      * @method Show\Field|Collection refund_no(string $label = null)
      * @method Show\Field|Collection closed(string $label = null)
      * @method Show\Field|Collection reviewed(string $label = null)
@@ -365,8 +407,10 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection stock(string $label = null)
      * @method Show\Field|Collection category_id(string $label = null)
+     * @method Show\Field|Collection long_title(string $label = null)
      * @method Show\Field|Collection sold_count(string $label = null)
      * @method Show\Field|Collection review_count(string $label = null)
+     * @method Show\Field|Collection start_at(string $label = null)
      * @method Show\Field|Collection province(string $label = null)
      * @method Show\Field|Collection city(string $label = null)
      * @method Show\Field|Collection district(string $label = null)

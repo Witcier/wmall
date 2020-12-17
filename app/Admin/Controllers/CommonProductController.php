@@ -23,7 +23,7 @@ abstract class CommonProductController extends AdminController
 
     protected function grid()
     {
-        return Grid::make(new Product('crowdfunding'), function (Grid $grid) {
+        return Grid::make(new Product(['crowdfunding','seckill']), function (Grid $grid) {
             // 根据类型筛选出商品
             $grid->model()->where('type', $this->getProductType())->orderBy('updated_at', 'desc');
             // 调用自定义方法
@@ -51,7 +51,7 @@ abstract class CommonProductController extends AdminController
 
     protected function form()
     {
-        return Form::make(new Product(['skus','properties']), function (Form $form) {
+        return Form::make(new Product(['skus','properties','crowdfunding','seckill']), function (Form $form) {
 
             // 隐藏字段 type
             $form->hidden('type')->value($this->getProductType());
