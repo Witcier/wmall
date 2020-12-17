@@ -137,6 +137,9 @@ return [
     // 订单关闭时间设置(单位：秒)
     'order_ttl' => 1800,
 
+    // 秒杀订单关闭时间设置(单位：秒)
+    'seckill_order_ttl' => 600,
+
     // NGROK 内网穿透
     'ngrok_url' => env('NGROK_URL'),
 

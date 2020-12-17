@@ -64,6 +64,9 @@ Route::group(['middleware' => ['auth']], function () {
     // 众筹商品下单
     Route::post('crowdfunding_orders','OrdersController@crowdfunding')->name('crowdfunding_orders.store');
 
+    // 秒杀订单下单
+    Route::post('seckill_orders','OrdersController@seckill')->name('seckill_orders.store');
+
     // 分期付款
     Route::post('payment/{order}/installment','PaymentController@payByInstallment')->name('payment.installment');
 
