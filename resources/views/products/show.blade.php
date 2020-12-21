@@ -409,9 +409,11 @@
         if (!ret) {
           return;
         }
+        // 从地址列表找出当前用户的选择的地址对象
+        var address = _.find(addresses, {id: parseInt(addressSelector.val())});
         // 构建请求参数
         var req = {
-          address_id: addressSelector.val(),
+          address: _.pick(address, ['province','city','district','address','zip','contact_name','contact_phone']),
           sku_id: $('label.active input[name=skus]').val()
         };
         // 调用秒杀商品下单接口
