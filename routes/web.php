@@ -14,7 +14,7 @@
 use Illuminate\Support\Facades\Route;
 
 // 秒杀订单下单，将秒杀订单的接口放在最开头是：路由匹配是从上往下的
-Route::post('seckill_orders','OrdersController@seckill')->name('seckill_orders.store');
+Route::post('seckill_orders','OrdersController@seckill')->name('seckill_orders.store')->middleware('random_drop:90');
 
 Route::redirect('/', '/products')->name('index');
 // 商城主页
