@@ -13,10 +13,14 @@
 
 use Illuminate\Support\Facades\Route;
 
+// 秒杀订单下单，将秒杀订单的接口放在最开头是：路由匹配是从上往下的
+Route::post('seckill_orders','OrdersController@seckill')->name('seckill_orders.store');
+
 Route::redirect('/', '/products')->name('index');
 // 商城主页
 Route::get('products','ProductsController@index')->name('products.index');
-
+//商品详情
+Route::get('products/{product}','ProductsController@show')->name('products.show');
 
 Auth::routes(['verify' => true]);
 
@@ -64,9 +68,6 @@ Route::group(['middleware' => ['auth']], function () {
     // 众筹商品下单
     Route::post('crowdfunding_orders','OrdersController@crowdfunding')->name('crowdfunding_orders.store');
 
-    // 秒杀订单下单
-    Route::post('seckill_orders','OrdersController@seckill')->name('seckill_orders.store');
-
     // 分期付款
     Route::post('payment/{order}/installment','PaymentController@payByInstallment')->name('payment.installment');
 
@@ -85,9 +86,6 @@ Route::group(['middleware' => ['auth']], function () {
      // 分期付款(微信)
     Route::get('installments/{installment}/wechat','InstallmentsController@payByWechat')->name('installments.wechat');
 });
-
-//商品详情
-Route::get('products/{product}','ProductsController@show')->name('products.show');
 
 // 服务端回调
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
