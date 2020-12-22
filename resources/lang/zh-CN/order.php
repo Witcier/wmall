@@ -1,10 +1,11 @@
-<?php 
+<?php
 return [
     'labels' => [
         'Order' => '订单',
     ],
     'fields' => [
         'no' => '订单号',
+        'type' => '订单类型',
         'user_id' => 'user_id',
         'address' => 'address',
         'total_amount' => '总金额',

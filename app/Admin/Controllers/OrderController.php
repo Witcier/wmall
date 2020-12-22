@@ -43,7 +43,16 @@ class OrderController extends AdminController
             $grid->column('total_amount')->filter(
                 Grid\Column\Filter\Between::make()
             );
-            $grid->column('payment_method')->display( function ($value) {
+            $grid->column('type')->display(function ($value) {
+                return AppOrder::$typeMap[$value];
+            })->label('primary')->filter(
+                Grid\Column\Filter\In::make([
+                    'normal' => '普通商品订单',
+                    'crowdfunding'  => '众筹商品订单',
+                    'seckill' => '秒杀商品订单',
+                ])
+            );
+            $grid->column('payment_method')->display(function ($value) {
                 switch ($value) {
                     case 'alipay':
                         return '支付宝支付';
@@ -111,11 +120,11 @@ class OrderController extends AdminController
                     'success' => '退款成功',
                 ])
             );
-            $grid->column('paid_at')->display( function ($value) {
-                return $value ? $value : '未支付';
-            })->filter(
-                Grid\Column\Filter\Between::make()->datetime()
-            );
+            // $grid->column('paid_at')->display( function ($value) {
+            //     return $value ? $value : '未支付';
+            // })->filter(
+            //     Grid\Column\Filter\Between::make()->datetime()
+            // );
             $grid->column('created_at')->filter(
                 Grid\Column\Filter\Between::make()->datetime()
             )->sortable();
@@ -152,6 +161,7 @@ class OrderController extends AdminController
 
             $grid->selector(function (Grid\Tools\Selector $selector) {
                 $selector->selectOne('payment_method', '支付方式', ['alipay' => '支付宝支付', 'wechat' => '微信支付', 'installment' => '分期付款']);
+                $selector->selectOne('type', '订单类型', ['normal' => '普通商品订单', 'crowdfunding' => '众筹商品订单', 'seckill' => '秒杀商品订单']);
                 $selector->selectOne('closed', '订单关闭', [1 => '是', 0 => '否']);
                 $selector->selectOne('ship_status', '物流状态', ['pending' => '未发货', 'delivered' => '已发货', 'received' => '已收货']);
                 $selector->selectOne('total_amount', '订单金额', ['0-599', '600-1999', '1999-4999', '5000+'], function ($query, $value) {

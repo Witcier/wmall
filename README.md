@@ -23,8 +23,7 @@
 &nbsp;&nbsp;创建 .env 文件   
 * `cp .env.example .env`     
 * `php artisan key:generate`    
-&nbsp;&nbsp;修改.env配置，配置mysql数据库     
-&nbsp;&nbsp;执行数据库迁移     
+&nbsp;&nbsp;修改.env配置，配置mysql数据库，执行数据库迁移     
 * `php artisan migrate`    
 &nbsp;&nbsp;执行 Elasticsearch 迁移命令，在执行这个命令之前确保你已经安装了 Elasticsearch 和 IK 分析器   
 * `php artisan es:migrate`    
