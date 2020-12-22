@@ -34,7 +34,12 @@ class SeckillProductController extends CommonProductController
 
         // 当秒杀商品表单保存时触发
         $form->saved(function (Form $form) {
-            $product = AppProduct::find($form->model()->id);
+            if ($form->isCreating()) {
+                $id = $form->getKey();
+            } else {
+                $id = $form->model()->id;
+            }
+            $product = AppProduct::find($id);
             // 商品重新加载秒杀 和 SKU 字段
             $product->load(['seckill', 'skus']);
             // 获取当前时间与秒杀结束时间的差值
