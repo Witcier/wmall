@@ -19,5 +19,16 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'IndexController@index')->name('index');
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('user/addresses', 'User\AddressesController@index')->name('user.addresses.index');
+    // 收货地址
+    Route::prefix('user/addresses')
+        ->namespace('User')
+        ->name('user.addresses.')
+        ->group(function () {
+            Route::get('/', 'AddressesController@index')->name('index');
+            Route::get('create', 'AddressesController@create')->name('create');
+            Route::post('/', 'AddressesController@store')->name('store');
+            Route::get('{address}', 'AddressesController@edit')->name('edit');
+            Route::put('{address}', 'AddressesController@update')->name('update');
+            Route::delete('{address}', 'AddressesController@destroy')->name('destroy');
+    });
 });
