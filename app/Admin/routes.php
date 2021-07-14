@@ -14,4 +14,11 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
 
+    // 用户管理
+    $router->resource('users', 'UsersController');
+
+    $router->namespace('Products')
+        ->group(function (Router $router) {
+            $router->resource('products', 'ProductsController');
+        });
 });
