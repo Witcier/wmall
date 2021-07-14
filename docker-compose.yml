@@ -1,7 +1,7 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    shop:
+    app:
         build:
             context: ./docker/8.0
             dockerfile: Dockerfile
