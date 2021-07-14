@@ -18,4 +18,6 @@ Auth::routes(['verify' => true]);
 // 首页
 Route::get('/', 'IndexController@index')->name('index');
 
-
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('user/addresses', 'User\AddressesController@index')->name('user.addresses.index');
+});
