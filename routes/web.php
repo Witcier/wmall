@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes(['verify' => true]);
+
+// 首页
 Route::get('/', 'IndexController@index')->name('index');
 
-Auth::routes();
 
