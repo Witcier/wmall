@@ -22,7 +22,7 @@ class ProductsController extends AdminController
             $grid->column('title');
             $grid->column('description');
             $grid->column('image')->image('', 80, 80);
-            $grid->column('on_sale');
+            $grid->column('on_sale')->switch();
             $grid->column('rating');
             $grid->column('sold_count');
             $grid->column('review_count');

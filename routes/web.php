@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['verify' => true]);
 
 // 首页
-Route::get('/', 'IndexController@index')->name('index');
+Route::redirect('/', '/products')->name('index');
+
+// 商品列表
+Route::get('products', 'Products\ProductsController@index')->name('products.index');
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
     // 收货地址
