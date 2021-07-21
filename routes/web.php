@@ -20,6 +20,8 @@ Route::redirect('/', '/products')->name('index');
 
 // 商品列表
 Route::get('products', 'Products\ProductsController@index')->name('products.index');
+// 商品详情
+Route::get('products/{product}', 'Products\ProductsController@show')->name('products.show');
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
     // 收货地址
