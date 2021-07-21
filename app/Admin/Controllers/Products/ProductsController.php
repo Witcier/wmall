@@ -20,7 +20,6 @@ class ProductsController extends AdminController
         return Grid::make(new Product(), function (Grid $grid) {
             $grid->column('id')->sortable();
             $grid->column('title');
-            $grid->column('description');
             $grid->column('image')->image('', 80, 80);
             $grid->column('on_sale')->switch();
             $grid->column('rating');

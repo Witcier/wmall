@@ -19,11 +19,11 @@ class UsersController extends AdminController
     {
         return Grid::make(new User(), function (Grid $grid) {
             $grid->column('id')->sortable();
+            $grid->column('name');
             $grid->column('email');
             $grid->column('email_verified_at')->display(function ($value) {
                 return $value ? '是' : '否';
             });
-            $grid->column('name');
         
             $grid->toolsWithOutline(false);
             $grid->disableActions();
