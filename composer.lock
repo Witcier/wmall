@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66e17a999165a7acd1c4c0b8ca23395c",
+    "content-hash": "d3e29c92123d0ae91ab422caf01cb9d6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1453,64 +1453,6 @@
                 "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.0.1"
             },
             "time": "2020-07-09T08:09:16+00:00"
-        },
-        {
-            "name": "lake/login-captcha",
-            "version": "1.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/deatil/dcat-login-captcha.git",
-                "reference": "110f267cf9fba33db65c0293232d1c9469da64d1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/deatil/dcat-login-captcha/zipball/110f267cf9fba33db65c0293232d1c9469da64d1",
-                "reference": "110f267cf9fba33db65c0293232d1c9469da64d1",
-                "shasum": ""
-            },
-            "require": {
-                "dcat/laravel-admin": "^2.0",
-                "php": ">=7.2.5"
-            },
-            "type": "library",
-            "extra": {
-                "dcat-admin": "Lake\\LoginCaptcha\\ServiceProvider",
-                "laravel": {
-                    "providers": [
-                        "Lake\\LoginCaptcha\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Lake\\LoginCaptcha\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "deatil",
-                    "email": "deatil@github.com",
-                    "homepage": "https://github.com/deatil"
-                }
-            ],
-            "description": "Dcat-admin login captcha extension.",
-            "homepage": "https://github.com/deatil/dcat-login-captcha",
-            "keywords": [
-                "captcha",
-                "dcat-admin",
-                "extension",
-                "lake",
-                "login-captcha"
-            ],
-            "support": {
-                "issues": "https://github.com/deatil/dcat-login-captcha/issues",
-                "source": "https://github.com/deatil/dcat-login-captcha/tree/1.0.8"
-            },
-            "time": "2021-04-08T14:12:42+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
