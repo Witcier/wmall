@@ -41,7 +41,7 @@ class Order extends Model
         'ship_data', 'extra',
     ];
 
-    protected $cast = [
+    protected $casts = [
         'closed' => 'boolean',
         'paid' => 'boolean',
         'reviewed' => 'boolean',
@@ -65,10 +65,6 @@ class Order extends Model
                 if (!$model->no) {
                     return false;
                 }
-            }
-
-            if (is_array($model->address)) {
-                $model->address = json_encode($model->address);
             }
         });
     }

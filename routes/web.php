@@ -51,6 +51,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // 用户订单列表
     Route::get('orders', 'Order\OrdersController@index')->name('orders.index');
+    // 订单详情
+    Route::get('orders/{order}', 'Order\OrdersController@show')->name('orders.show');
     // 下单
     Route::post('orders', 'Order\OrdersController@store')->name('orders.store');
 });
