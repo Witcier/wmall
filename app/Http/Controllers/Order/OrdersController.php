@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Order;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\OrderRequest;
+use App\Jobs\CloseOrder;
 use App\Models\Order\Order;
 use App\Models\Product\Sku;
 use App\Models\User\Address;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
+use function Laravel\Octane\Swoole\dispatch;
 
 class OrdersController extends Controller
 {
@@ -30,7 +33,7 @@ class OrdersController extends Controller
                 'contact_phone' => $address->contact_phone,
             ];
             $order = new Order([
-                'address' => json_encode($addressData),
+                'address' => $addressData,
                 'remark' => $request->input('remark'),
                 'total_amount' => 0,
             ]);
@@ -67,6 +70,8 @@ class OrdersController extends Controller
 
             return $order;
         });
+
+        $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
 
         return $order;
     }

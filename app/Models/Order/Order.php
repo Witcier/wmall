@@ -66,6 +66,10 @@ class Order extends Model
                     return false;
                 }
             }
+
+            if (is_array($model->address)) {
+                $model->address = json_encode($model->address);
+            }
         });
     }
 

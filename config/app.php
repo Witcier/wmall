@@ -123,6 +123,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'order_ttl' => env('ORDERTTL', 1800),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
