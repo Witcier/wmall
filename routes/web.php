@@ -60,6 +60,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('payment/{order}/alipay', 'Pay\PaymentController@payByAlipay')->name('payment.alipay');
     // 支付宝支付回调
     Route::get('payment/alipay/return', 'Pay\PaymentController@alipayReturn')->name('payment.alipay.return');
+
+    // 微信支付
+    Route::get('payment/{order}/wechat', 'Pay\PaymentController@payByWechat')->name('payment.wechat');
 });
 
 // 商品详情
@@ -67,3 +70,5 @@ Route::get('products/{product}', 'Products\ProductsController@show')->name('prod
 
 // 支付宝支付服务端回调
 Route::post('payment/alipay/notify', 'Pay\PaymentController@alipayNotify')->name('payment.alipay.notify');
+// 微信支付服务端回调
+Route::post('payment/wechat/notify', 'Pay\PaymentController@wechatNotify')->name('payment.wechat.notify');

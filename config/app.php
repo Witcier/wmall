@@ -127,6 +127,8 @@ return [
 
     'ngrok_url' => env('NGROK_URL'),
 
+    'log' => 'daily',
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
