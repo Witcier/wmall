@@ -20,13 +20,12 @@ class UpdateProductSoldCount implements ShouldQueue
             $product = $item->product;
 
             $soldCount = Item::query()
-                ->where('product_id', $product)
+                ->where('product_id', $product->id)
                 ->whereHas('order', function ($query) {
-                    $query->whereNotNull('paid_at');
+                    $query->where('paid', true);
                 })
                 ->sum('amount');
 
-            \Log::info("amount:".$soldCount);
             $product->update([
                 'sold_count' => $soldCount,
             ]);
