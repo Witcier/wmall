@@ -22,6 +22,10 @@ class Order extends Model
     const SHIP_STATUS_DELIVERED = 1;
     const SHIP_STATUS_RECEIVED = 2;
 
+    // 支付方式
+    const PAYMENT_METHOD_ALIPAY = 1;
+    const PAYMENT_METHOD_WECHAT = 2;
+
     public static $refundStatusMap = [
         self::REFUND_STATUS_PENDING => '未退款',
         self::REFUND_STATUS_APPLIED => '已申请退款',

@@ -48,10 +48,10 @@
                       <td rowspan="{{ count($order->items) }}" class="text-center total-amount">￥{{ $order->total_amount }}</td>
                       <td rowspan="{{ count($order->items) }}" class="text-center">
                         @if($order->paid_at)
-                          @if($order->refund_status === \App\Models\Order::REFUND_STATUS_PENDING)
+                          @if($order->refund_status === \App\Models\Order\Order::REFUND_STATUS_PENDING)
                             已支付
                           @else
-                            {{ \App\Models\Order::$refundStatusMap[$order->refund_status] }}
+                            {{ \App\Models\Order\Order::$refundStatusMap[$order->refund_status] }}
                           @endif
                         @elseif($order->closed)
                           已关闭
@@ -61,7 +61,7 @@
                           否则订单将自动关闭
                         @endif
                       </td>
-                      <td rowspan="{{ count($order->items) }}" class="text-center"><a class="btn btn-primary btn-sm" href="{{ route('orders.show', ['order' => $order->id]) }}>查看订单</a></td>
+                      <td rowspan="{{ count($order->items) }}" class="text-center"><a class="btn btn-primary btn-sm" href="{{ route('orders.show', ['order' => $order->id]) }}">查看订单</a></td>
                     @endif
                   </tr>
                 @endforeach
