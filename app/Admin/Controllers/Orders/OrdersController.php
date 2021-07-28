@@ -7,10 +7,13 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 
 class OrdersController extends AdminController
 {
+    use ValidatesRequests;
+    
     protected function grid()
     {
         return Grid::make(Order::with(['user']), function (Grid $grid) {
