@@ -3,12 +3,13 @@
 namespace App\Models\Order;
 
 use App\Models\User\User;
+use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, HasDateTimeFormatter;
 
     // 退款状态
     const REFUND_STATUS_PENDING = 0;
@@ -38,6 +39,11 @@ class Order extends Model
         self::SHIP_STATUS_PENDING => '未发货',
         self::SHIP_STATUS_DELIVERED => '发货中',
         self::SHIP_STATUS_RECEIVED => '已收货',
+    ];
+
+    public static $paymentMethodMap = [
+        self::PAYMENT_METHOD_ALIPAY => '支付宝支付',
+        self::PAYMENT_METHOD_WECHAT => '微信支付',
     ];
 
     protected $fillable = [

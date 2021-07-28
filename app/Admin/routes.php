@@ -21,4 +21,10 @@ Route::group([
         ->group(function (Router $router) {
             $router->resource('products', 'ProductsController');
         });
+
+    $router->namespace('Orders')
+        ->group(function (Router $router) {
+            $router->get('orders', 'OrdersController@index')->name('orders.index');
+            $router->get('orders/{id}', 'OrdersController@show')->name('orders.show');
+        });
 });
