@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Products;
 
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
+use App\Models\Order\Item;
 use App\Models\Product\Product;
 use Illuminate\Http\Request;
 
@@ -57,9 +58,18 @@ class ProductsController extends Controller
             $favored = boolval($user->favoriteProducts()->find($product->id));
         }
 
+        $reviews = Item::query()
+            ->with(['order.user', 'productSku'])
+            ->where('product_Id', $product->id)
+            ->whereNotNull('reviewed_at')
+            ->orderBy('reviewed_at', 'desc')
+            ->limit(10)
+            ->get();
+
         return view('products.show', [
             'product' => $product,
             'favored' => $favored,
+            'reviews' => $reviews,
         ]);
     }
 
