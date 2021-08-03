@@ -2,6 +2,8 @@
 
 namespace App\Models\Order;
 
+use App\Models\Coupon\Code;
+use App\Models\User\User;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

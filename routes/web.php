@@ -61,6 +61,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('orders/{order}/review', 'Order\OrdersController@review')->name('orders.review.show');
     Route::post('orders/{order}/review', 'Order\OrdersController@reviewed')->name('orders.review.store');
 
+    // 检查优惠卷优惠码
+    Route::get('coupon/codes/{code}', 'Coupon\CodesController@show')->name('coupon.codes.show');
+
     // 申请退款
     Route::post('orders/{order}/refund', 'Order\OrdersController@applyRefund')->name('orders.refund');
 

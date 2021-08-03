@@ -85,6 +85,7 @@ class CodesController extends AdminController
             $form->disableViewButton();
             $form->disableViewCheck();
             $form->disableEditingCheck();
+            $form->disableCreatingCheck();
         });
     }
 }
