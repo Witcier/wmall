@@ -35,4 +35,11 @@ Route::group([
             // 退款处理
             $router->post('orders/{order}/refund', 'OrdersController@handleRefund')->name('orders.refund');
         });
+
+    // 优惠卷管理
+    $router->namespace('Coupons')
+        ->prefix('coupons')
+        ->group(function (Router $router) {
+            $router->resource('codes', 'CodesController');
+        });
 });

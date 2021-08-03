@@ -2,7 +2,6 @@
 
 namespace App\Models\Order;
 
-use App\Models\User\User;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -88,6 +87,11 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(Item::class);
+    }
+
+    public function couponCode()
+    {
+        return $this->belongsTo(Code::class);
     }
 
     public static function findAvailableNo()
