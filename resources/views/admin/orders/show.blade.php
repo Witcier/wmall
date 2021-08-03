@@ -82,7 +82,72 @@
           <td>{{ $order->ship_data['express_no'] }}</td>
         </tr>
         @endif
+        @if($order->refund_status !== \App\Models\Order\Order::REFUND_STATUS_PENDING)
+        <tr>
+          <td>退款状态：</td>
+          <td colspan="2">{{ \App\Models\Order\Order::$refundStatusMap[$order->refund_status] }}，理由：{{ $order->extra['refund_reason'] }}</td>
+          <td>
+            <!-- 如果订单退款状态是已申请，则展示处理按钮 -->
+            @if($order->refund_status === \App\Models\Order\Order::REFUND_STATUS_APPLIED)
+            <button class="btn btn-sm btn-success" id="btn-refund-agree">同意</button>
+            <button class="btn btn-sm btn-danger" id="btn-refund-disagree">不同意</button>
+            @endif
+          </td>
+        </tr>
+        @endif
         </tbody>
       </table>
     </div>
   </div>
+
+<script>
+  $(document).ready(function() {
+    // 不同意 按钮的点击事件
+    $('#btn-refund-disagree').click(function() {
+      Dcat.swal.fire({
+        title: '输入拒绝退款理由',
+        input: 'text',
+        showCancelButton: true,
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        showLoaderOnConfirm: true,
+        preConfirm: function(inputValue) {
+          if (!inputValue) {
+            Dcat.error('理由不能为空', null, {
+              timeOut: 2000, 
+            });
+            return false;
+          }
+          $.ajax({
+            url: '{{ route('dcat.admin.orders.refund', [$order->id]) }}',
+            type: 'POST',
+            data: JSON.stringify({   // 将请求变成 JSON 字符串
+              agree: false,  // 拒绝申请
+              reason: inputValue,
+            }),
+            contentType: 'application/json',  // 请求的数据格式为 JSON
+            success: function (res) {
+              Dcat.success('退款拒绝成功', null, {
+                timeOut: 2000, 
+              });
+              location.reload();
+            },
+            error: function () {
+              Dcat.success('退款拒绝失败', null, {
+                timeOut: 2000, 
+              });
+              location.reload();
+            }
+          });
+        },
+        allowOutsideClick: false
+      }).then(function (ret) {
+        // 如果用户点击了『取消』按钮，则不做任何操作
+        if (ret.dismiss === 'cancel') {
+          return;
+        }
+      });
+    });
+
+  });
+</script>

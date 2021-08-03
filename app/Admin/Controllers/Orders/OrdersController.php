@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers\Orders;
 
+use App\Exceptions\InvalidRequestException;
+use App\Http\Requests\Admin\HandleRefundRequest;
 use App\Models\Order\Order;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -97,5 +99,26 @@ class OrdersController extends AdminController
         ]);
 
         return redirect()->back();
+    }
+
+    public function handleRefund(Order $order, HandleRefundRequest $request)
+    {
+        if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
+            throw new InvalidRequestException('订单状态不正确');
+        }
+
+        if ($agree = $request->input('agree')) {
+
+        } else {
+            $extra = $order->extra ?: [];
+            $extra['refund_disagree_reason'] = $request->input('reason');
+
+            $order->update([
+                'refund_status' => Order::REFUND_STATUS_PENDING,
+                'extra' => $extra,
+            ]);
+        }
+
+        return $order;
     }
 }
