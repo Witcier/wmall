@@ -6,6 +6,7 @@ use App\Models\User\User;
 use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class Order extends Model
 {
@@ -103,5 +104,14 @@ class Order extends Model
         \Log::warning("find order no failed");
 
         return false;
+    }
+
+    public static function findAvailableRefundNo()
+    {
+        do {
+            $no = Uuid::uuid4()->getHex();
+        } while (self::query()->where('refund_no', $no)->exists());
+
+        return $no;
     }
 }

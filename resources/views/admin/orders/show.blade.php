@@ -46,6 +46,7 @@
           <td>{{ \App\Models\Order\Order::$shipStatusMap[$order->ship_status] }}</td>
         </tr>
         @if($order->ship_status === \App\Models\Order\Order::SHIP_STATUS_PENDING)
+        @if($order->refund_status !== \App\Models\Order\Order::REFUND_STATUS_SUCCESS)
         <tr>
           <td colspan="4">
             <form action="{{ route('dcat.admin.orders.ship', [$order->id]) }}" method="post" class="form-inline">
@@ -73,6 +74,7 @@
             </form>
           </td>
         </tr>
+        @endif
         @else
         <!-- 否则展示物流公司和物流单号 -->
         <tr>
@@ -146,6 +148,38 @@
         if (ret.dismiss === 'cancel') {
           return;
         }
+      });
+    });
+
+  // 同意 按钮的点击事件
+  $('#btn-refund-agree').click(function() {
+      Dcat.swal.fire({
+        title: '确认要将款项退还给用户？',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        showLoaderOnConfirm: true,
+        preConfirm: function() {
+          return $.ajax({
+            url: '{{ route('dcat.admin.orders.refund', [$order->id]) }}',
+            type: 'POST',
+            data: JSON.stringify({
+              agree: true, // 代表同意退款
+            }),
+            contentType: 'application/json',
+          });
+        },
+        allowOutsideClick: false
+      }).then(function (ret) {
+        // 如果用户点击了『取消』按钮，则不做任何操作
+        if (ret.dismiss === 'cancel') {
+          return;
+        }
+        Dcat.success('退款成功', null, {
+          timeOut: 2000, 
+        });
+        // location.reload();
       });
     });
 
