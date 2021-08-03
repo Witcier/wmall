@@ -43,32 +43,6 @@ class CodesController extends AdminController
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Code(), function (Show $show) {
-            $show->field('id');
-            $show->field('name');
-            $show->field('code');
-            $show->field('type');
-            $show->field('value');
-            $show->field('total');
-            $show->field('used');
-            $show->field('min_amount');
-            $show->field('start_at');
-            $show->field('end_at');
-            $show->field('status');
-            $show->field('created_at');
-            $show->field('updated_at');
-        });
-    }
-
-    /**
      * Make a form builder.
      *
      * @return Form
@@ -77,19 +51,40 @@ class CodesController extends AdminController
     {
         return Form::make(new Code(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
-            $form->text('code');
-            $form->text('type');
-            $form->text('value');
-            $form->text('total');
-            $form->text('used');
-            $form->text('min_amount');
-            $form->text('start_at');
-            $form->text('end_at');
-            $form->text('status');
-        
-            $form->display('created_at');
-            $form->display('updated_at');
+            $form->text('name')->rules('required');
+            $form->text('code')->rules(function($form) {
+                if ($id = $form->model()->id) {
+                    return 'required|unique:coupon_codes,code,'.$id.',id';
+                } else {
+                    return 'required|unique:coupon_codes';
+                }
+            })->default(Code::findAvailableCode());
+            $form->radio('type')->options(Code::$typeMap)->rules('required')->default(Code::TYPE_FIXED);
+            $form->text('value')->rules(function ($form) {
+                if (request()->input('type') === Code::TYPE_PERCENT) {
+                    return 'required|numeric|between:1,99';
+                }
+                
+                return 'required|numeric|min:0.01';
+            });
+            $form->text('total')->rules('required|numeric|min:1');
+            $form->text('min_amount')->rules('required|numeric|min:1');
+            $form->datetime('start_at');
+            $form->datetime('end_at');
+            $form->radio('status')->options([
+                '1' => '是',
+                '0' => '否',
+            ]);
+
+            $form->saving(function (Form $form) {
+                if (!$form->code) {
+                    $form->code = Code::findAvailableCode();
+                }
+            });
+
+            $form->disableViewButton();
+            $form->disableViewCheck();
+            $form->disableEditingCheck();
         });
     }
 }

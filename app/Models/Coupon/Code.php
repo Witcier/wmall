@@ -25,10 +25,6 @@ class Code extends Model
         'name', 'code', 'type', 'value', 'total', 'used', 'min_amount', 'start_at', 'end_at', 'status',
     ];
 
-    protected $casts = [
-        'status' => 'boolean',
-    ];
-
     protected $dates = [
         'start_at', 'end_at',
     ];
