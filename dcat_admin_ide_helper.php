@@ -45,6 +45,10 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection status
      * @property Grid\Column|Collection total
      * @property Grid\Column|Collection used
+     * @property Grid\Column|Collection product_id
+     * @property Grid\Column|Collection target_amount
+     * @property Grid\Column|Collection total_amount
+     * @property Grid\Column|Collection user_count
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection exception
      * @property Grid\Column|Collection failed_at
@@ -53,7 +57,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection uuid
      * @property Grid\Column|Collection order_id
      * @property Grid\Column|Collection price
-     * @property Grid\Column|Collection product_id
      * @property Grid\Column|Collection rating
      * @property Grid\Column|Collection review
      * @property Grid\Column|Collection reviewed_at
@@ -72,7 +75,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection reviewed
      * @property Grid\Column|Collection ship_data
      * @property Grid\Column|Collection ship_status
-     * @property Grid\Column|Collection total_amount
      * @property Grid\Column|Collection email
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection is_directory
@@ -127,6 +129,10 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection status(string $label = null)
      * @method Grid\Column|Collection total(string $label = null)
      * @method Grid\Column|Collection used(string $label = null)
+     * @method Grid\Column|Collection product_id(string $label = null)
+     * @method Grid\Column|Collection target_amount(string $label = null)
+     * @method Grid\Column|Collection total_amount(string $label = null)
+     * @method Grid\Column|Collection user_count(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection exception(string $label = null)
      * @method Grid\Column|Collection failed_at(string $label = null)
@@ -135,7 +141,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection uuid(string $label = null)
      * @method Grid\Column|Collection order_id(string $label = null)
      * @method Grid\Column|Collection price(string $label = null)
-     * @method Grid\Column|Collection product_id(string $label = null)
      * @method Grid\Column|Collection rating(string $label = null)
      * @method Grid\Column|Collection review(string $label = null)
      * @method Grid\Column|Collection reviewed_at(string $label = null)
@@ -154,7 +159,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection reviewed(string $label = null)
      * @method Grid\Column|Collection ship_data(string $label = null)
      * @method Grid\Column|Collection ship_status(string $label = null)
-     * @method Grid\Column|Collection total_amount(string $label = null)
      * @method Grid\Column|Collection email(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection is_directory(string $label = null)
@@ -214,6 +218,10 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection status
      * @property Show\Field|Collection total
      * @property Show\Field|Collection used
+     * @property Show\Field|Collection product_id
+     * @property Show\Field|Collection target_amount
+     * @property Show\Field|Collection total_amount
+     * @property Show\Field|Collection user_count
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection exception
      * @property Show\Field|Collection failed_at
@@ -222,7 +230,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection uuid
      * @property Show\Field|Collection order_id
      * @property Show\Field|Collection price
-     * @property Show\Field|Collection product_id
      * @property Show\Field|Collection rating
      * @property Show\Field|Collection review
      * @property Show\Field|Collection reviewed_at
@@ -241,7 +248,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection reviewed
      * @property Show\Field|Collection ship_data
      * @property Show\Field|Collection ship_status
-     * @property Show\Field|Collection total_amount
      * @property Show\Field|Collection email
      * @property Show\Field|Collection token
      * @property Show\Field|Collection is_directory
@@ -296,6 +302,10 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection status(string $label = null)
      * @method Show\Field|Collection total(string $label = null)
      * @method Show\Field|Collection used(string $label = null)
+     * @method Show\Field|Collection product_id(string $label = null)
+     * @method Show\Field|Collection target_amount(string $label = null)
+     * @method Show\Field|Collection total_amount(string $label = null)
+     * @method Show\Field|Collection user_count(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection exception(string $label = null)
      * @method Show\Field|Collection failed_at(string $label = null)
@@ -304,7 +314,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection uuid(string $label = null)
      * @method Show\Field|Collection order_id(string $label = null)
      * @method Show\Field|Collection price(string $label = null)
-     * @method Show\Field|Collection product_id(string $label = null)
      * @method Show\Field|Collection rating(string $label = null)
      * @method Show\Field|Collection review(string $label = null)
      * @method Show\Field|Collection reviewed_at(string $label = null)
@@ -323,7 +332,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection reviewed(string $label = null)
      * @method Show\Field|Collection ship_data(string $label = null)
      * @method Show\Field|Collection ship_status(string $label = null)
-     * @method Show\Field|Collection total_amount(string $label = null)
      * @method Show\Field|Collection email(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection is_directory(string $label = null)

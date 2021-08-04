@@ -14,7 +14,7 @@ class CategoriesController extends AdminController
 
     public function index(Content $content)
     {
-        return $content->header('导航-分类')
+        return $content->header('商品-分类')
             ->description(trans('admin.list'))
             ->body($this->treeView());
     }

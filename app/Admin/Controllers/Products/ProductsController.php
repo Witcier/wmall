@@ -6,73 +6,29 @@ use App\Models\Product\Category;
 use App\Models\Product\Product;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Http\Controllers\AdminController;
 
-class ProductsController extends AdminController
+class ProductsController extends CommonController
 {
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
+    public function getProductType()
     {
-        return Grid::make(new Product(), function (Grid $grid) {
-            $grid->model()->with(['category'])->orderBy('updated_at', 'desc');
-            $grid->column('id')->sortable();
-            $grid->column('title');
-            $grid->column('category.name');
-            $grid->column('image')->image('', 80, 80);
-            $grid->column('on_sale')->switch();
-            $grid->column('rating');
-            $grid->column('sold_count');
-            $grid->column('review_count');
-            $grid->column('price');
-        
-            $grid->toolsWithOutline(false);
-            $grid->disableViewButton();
-
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->panel();
-
-                $filter->like('title')->width(4);
-            });
-        });
+        return Product::TYPE_NORMAL;
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
+    protected function customGrid(\Dcat\Admin\Grid $grid)
     {
-        return Form::make(Product::with('skus'), function (Form $form) {
-            $form->text('title')->rules('required|string');
-            $form->select('product_category_id')
-                ->options(Category::selectOptions())
-                ->rules('required');
-            $form->textarea('description')->rules('required');
-            $form->image('image')->rules('required|image')->uniqueName()->autoUpload();
-            $form->radio('on_sale')->options(['1' => '是', '0' => '否'])->default(0);
+        $grid->column('id')->sortable();
+        $grid->column('title');
+        $grid->column('category.name');
+        $grid->column('image')->image('', 80, 80);
+        $grid->column('on_sale')->switch();
+        $grid->column('rating');
+        $grid->column('sold_count');
+        $grid->column('review_count');
+        $grid->column('price');
+    }
 
-            $form->hasMany('skus', function (Form\NestedForm $form) {
-                $form->text('title')->rules('required|string');
-                $form->text('description')->rules('required');
-                $form->text('price')->rules('required|numeric|min:0.01');
-                $form->text('stock')->rules('required|numeric|min:0');
-            });
-
-            // 定义事件回调，当模型即将保存时会触发这个回调
-            $form->saving(function (Form $form) {
-                $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME, 0)->min('price') ?: 0;
-            });
-
-            // 禁用工具
-            $form->disableViewButton();
-            $form->disableViewCheck();
-            $form->disableEditingCheck();
-            $form->disableCreatingCheck();
-        });
+    protected function customForm(\Dcat\Admin\Form $form)
+    {
+        
     }
 }

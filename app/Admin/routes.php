@@ -20,8 +20,10 @@ Route::group([
     // 商品管理
     $router->namespace('Products')
         ->group(function (Router $router) {
+            // 普通商品
             $router->resource('products', 'ProductsController');
-            
+            // 众筹商品
+            $router->resource('product/crowdfunding', 'CrowdfundingController');
             // 分类管理
             $router->resource('product/categories', 'CategoriesController');
         });
