@@ -15,6 +15,10 @@ return [
         'price' => '价格',
         'skus' => 'Sku 商品',
         'stock' => '库存',
+        'product_category_id' => '分类',
+        'category' => [
+            'name' => '分类',
+        ],
     ],
     'options' => [
     ],

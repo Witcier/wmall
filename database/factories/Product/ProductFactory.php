@@ -21,6 +21,8 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
+        $category = \App\Models\Product\Category::query()->where('is_directory', false)->inRandomOrder()->first();
+
         $image = $this->faker->randomElement([
             "https://cdn.learnku.com/uploads/images/201806/01/5320/7kG1HekGK6.jpg",
             "https://cdn.learnku.com/uploads/images/201806/01/5320/1B3n0ATKrn.jpg",
@@ -35,14 +37,15 @@ class ProductFactory extends Factory
         ]);
 
         return [
-            'title'        => $this->faker->word,
-            'description'  => $this->faker->sentence,
-            'image'        => $image,
-            'on_sale'      => true,
-            'rating'       => $this->faker->numberBetween(0, 5),
-            'sold_count'   => 0,
-            'review_count' => 0,
-            'price'        => 0,
+            'title'                 => $this->faker->word,
+            'description'           => $this->faker->sentence,
+            'image'                 => $image,
+            'on_sale'               => true,
+            'rating'                => $this->faker->numberBetween(0, 5),
+            'sold_count'            => 0,
+            'review_count'          => 0,
+            'price'                 => 0,
+            'product_category_id'   => $category ? $category->id : null,
         ];
     }
 }

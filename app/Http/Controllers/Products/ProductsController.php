@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Products;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Models\Order\Item;
+use App\Models\Product\Category;
 use App\Models\Product\Product;
 use Illuminate\Http\Request;
 
@@ -38,12 +39,23 @@ class ProductsController extends Controller
             }
         }
 
+        if ($request->input('product_category_id') && $category = Category::find($request->input('product_category_id'))) {
+            if ($category->is_directory || $category->hasChildren()) {
+                $builder->whereHas('category', function ($query) use ($category) {
+                    $query->where('path', 'like', $category->path . $category->id . '-%');
+                });
+            } else {
+                $builder->where('product_category_id', $category->id);
+            }
+        }
+
         return view('products.index', [
             'products' => $builder->paginate(16),
             'filters' => [
                 'order' => $order,
                 'search' => $search,
             ],
+            'category' => $category ?? null,
         ]);
     }
 

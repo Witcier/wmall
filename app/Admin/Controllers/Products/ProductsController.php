@@ -2,10 +2,10 @@
 
 namespace App\Admin\Controllers\Products;
 
+use App\Models\Product\Category;
 use App\Models\Product\Product;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
 
 class ProductsController extends AdminController
@@ -18,8 +18,10 @@ class ProductsController extends AdminController
     protected function grid()
     {
         return Grid::make(new Product(), function (Grid $grid) {
+            $grid->model()->with(['category'])->orderBy('updated_at', 'desc');
             $grid->column('id')->sortable();
             $grid->column('title');
+            $grid->column('category.name');
             $grid->column('image')->image('', 80, 80);
             $grid->column('on_sale')->switch();
             $grid->column('rating');
@@ -47,6 +49,9 @@ class ProductsController extends AdminController
     {
         return Form::make(Product::with('skus'), function (Form $form) {
             $form->text('title')->rules('required|string');
+            $form->select('product_category_id')
+                ->options(Category::selectOptions())
+                ->rules('required');
             $form->textarea('description')->rules('required');
             $form->image('image')->rules('required|image')->uniqueName()->autoUpload();
             $form->radio('on_sale')->options(['1' => '是', '0' => '否'])->default(0);

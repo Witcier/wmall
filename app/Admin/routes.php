@@ -19,12 +19,11 @@ Route::group([
 
     // 商品管理
     $router->namespace('Products')
-        ->prefix('products')
         ->group(function (Router $router) {
-            $router->resource('/', 'ProductsController');
+            $router->resource('products', 'ProductsController');
             
             // 分类管理
-            $router->resource('categories', 'CategoriesController');
+            $router->resource('product/categories', 'CategoriesController');
         });
 
     // 订单管理

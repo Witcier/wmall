@@ -43,7 +43,7 @@ class Category extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
     public function children()
@@ -75,5 +75,10 @@ class Category extends Model
             ->pluck('name')
             ->push($this->name)
             ->implode(' - ');
+    }
+
+    public function hasChildren()
+    {
+        return self::where('parent_id', $this->id)->exists();
     }
 }
