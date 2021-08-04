@@ -10,9 +10,11 @@ class Category extends Model
 {
     use HasFactory, ModelTree;
 
-    protected $table = 'product_category';
+    protected $table = 'product_categories';
 
     protected $orderColumn = 'id';
+
+    protected $titleColumn = 'name';
 
     protected $fillable = [
         'name', 'is_directory', 'level', 'path',
@@ -22,17 +24,19 @@ class Category extends Model
         'is_directory' => 'boolean',
     ];
 
-    protected function boot()
+    protected static function boot()
     {
         parent::boot();
 
         static::creating(function (Category $category) {
-            if (is_null($category->parent_id)) {
-                $category->level = 0;
+            if (!$category->parent_id) {
+                $category->level = 1;
                 $category->path = '-';
+                $category->is_directory = true;
             } else {
                 $category->level = $category->parent->level + 1;
-                $category->path = $category->parent->parent . $category->parent_id . '-';
+                $category->path = $category->parent->path . $category->parent_id . '-';
+                $category->is_directory = false;
             }
         });
     }
