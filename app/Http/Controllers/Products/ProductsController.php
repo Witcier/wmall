@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Order\Item;
 use App\Models\Product\Category;
 use App\Models\Product\Product;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, CategoryService $categoryService)
     {
         $builder = Product::query()->where('on_sale', true);
 
