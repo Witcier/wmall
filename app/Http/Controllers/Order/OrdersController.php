@@ -7,6 +7,7 @@ use App\Exceptions\CouponCodeUnavailableException;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\ApplyRefundRequest;
+use App\Http\Requests\Order\CrowdfundingOrderRequest;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\Order\ReviewedRequest;
 use App\Jobs\CloseOrder;
@@ -48,6 +49,15 @@ class OrdersController extends Controller
         }
 
         return $orderService->store($address, $request->input('remark'), $request->input('items'), $code);
+    }
+
+    public function crowdfunding(CrowdfundingOrderRequest $request, OrderService $orderService)
+    {
+        $sku = Sku::find($request->input('sku_id'));
+        $address = Address::find($request->input('address_id'));
+        $amount = $request->input('amount');
+
+        return $orderService->crowdfunding($address, $sku, $amount);
     }
 
     public function show(Order $order, Request $request)
