@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Controllers\Installment;
+
+use App\Http\Controllers\Controller;
+use App\Models\Installment\Installment;
+use Illuminate\Http\Request;
+
+class InstallmentsController extends Controller
+{
+    public function index(Request $request)
+    {
+        $installments = Installment::query()
+            ->where('user_id', $request->user()->id)
+            ->paginate(10);
+
+        return view('installments.index', [
+            'installments' => $installments,
+        ]);
+    }
+
+    public function show(Installment $installment)
+    {
+        $this->authorize('own', $installment);
+        
+        $items = $installment->items()->orderBy('sequence')->get();
+
+        return view('installments.show', [
+            'installment' => $installment,
+            'items' => $items,
+            'nextItem' => $items->where('paid_at', null)->first(),
+        ]);
+    }
+}

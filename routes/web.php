@@ -81,6 +81,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // 分期付款
     Route::post('payment/{order}/installment', 'Pay\PaymentController@payByInstallment')->name('payment.installment');
+
+    // 分期付款订单列表
+    Route::get('installments', 'Installment\InstallmentsController@index')->name('installments.index');
+    // 详情
+    Route::get('installments/{installment}', 'Installment\InstallmentsController@show')->name('installments.show');
 });
 
 // 商品详情
