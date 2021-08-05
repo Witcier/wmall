@@ -46,7 +46,8 @@
           <td>{{ \App\Models\Order\Order::$shipStatusMap[$order->ship_status] }}</td>
         </tr>
         @if($order->ship_status === \App\Models\Order\Order::SHIP_STATUS_PENDING)
-        @if($order->refund_status !== \App\Models\Order\Order::REFUND_STATUS_SUCCESS)
+        @if($order->refund_status !== \App\Models\Order\Order::REFUND_STATUS_SUCCESS && $order->type !== \App\Models\Order\Order::TYPE_CROWDFUNDING || 
+        $order->items[0]->product->crowdfunding->status === \App\Models\Product\Crowdfunding::STATUS_SUCCESS))
         <tr>
           <td colspan="4">
             <form action="{{ route('dcat.admin.orders.ship', [$order->id]) }}" method="post" class="form-inline">

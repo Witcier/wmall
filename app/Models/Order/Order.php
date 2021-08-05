@@ -29,6 +29,10 @@ class Order extends Model
     const PAYMENT_METHOD_ALIPAY = 1;
     const PAYMENT_METHOD_WECHAT = 2;
 
+    const TYPE_NORMAL = 1;
+    const TYPE_CROWDFUNDING = 2;
+    const TYPE_SKILL = 3;
+
     public static $refundStatusMap = [
         self::REFUND_STATUS_PENDING => '未退款',
         self::REFUND_STATUS_APPLIED => '已申请退款',
@@ -48,9 +52,15 @@ class Order extends Model
         self::PAYMENT_METHOD_WECHAT => '微信支付',
     ];
 
+    public static $typeMap = [
+        self::TYPE_NORMAL       => '普通订单',
+        self::TYPE_CROWDFUNDING => '众筹订单',
+        self::TYPE_SKILL        => '秒杀订单',
+    ];
+
     protected $fillable = [
         'no', 'address', 'total_amount', 'remark', 'paid', 'paid_at', 'payment_method', 'payment_no', 'refund_status', 'refund_no', 'closed', 'reviewed', 'ship_status',
-        'ship_data', 'extra',
+        'ship_data', 'extra', 'type',
     ];
 
     protected $casts = [

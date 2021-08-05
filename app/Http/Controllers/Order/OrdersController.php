@@ -140,6 +140,10 @@ class OrdersController extends Controller
             throw new InvalidRequestException('订单未支付');
         }
 
+        if ($order->type === Order::TYPE_CROWDFUNDING) {
+            throw new InvalidRequestException('众筹商品不支持退款');
+        }
+
         if ($order->refund_status !== Order::REFUND_STATUS_PENDING) {
             throw new InvalidRequestException('该订单已经申请过退款');
         }

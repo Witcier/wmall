@@ -39,6 +39,7 @@ class OrderService
                 'address' => $addressData,
                 'remark' => $remark,
                 'total_amount' => 0,
+                'type' => Order::TYPE_NORMAL,
             ]);
 
             $order->user()->associate($user);
@@ -108,6 +109,7 @@ class OrderService
                 'address' => $addressData,
                 'remark' => '',
                 'total_amount' => $sku->price * $amount,
+                'type' => Order::TYPE_CROWDFUNDING,
             ]);
 
             $order->user()->associate($user);
