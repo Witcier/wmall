@@ -7,6 +7,7 @@ use App\Exceptions\InvalidRequestException;
 use App\Http\Requests\Admin\HandleRefundRequest;
 use App\Models\Order\Order;
 use App\Models\Product\Crowdfunding;
+use App\Services\OrderService;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
@@ -21,6 +22,7 @@ class OrdersController extends AdminController
     protected function grid()
     {
         return Grid::make(Order::with(['user']), function (Grid $grid) {
+            $grid->model()->orderBy('updated_at', 'desc');
             $grid->column('id')->sortable();
             $grid->column('user.name', '买家');
             $grid->column('total_amount');
@@ -29,11 +31,18 @@ class OrdersController extends AdminController
                 '0' => true,
                 '1' => false,
             ]);
+            $grid->column('reviewed')->bool();
             $grid->column('paid')->bool();
             $grid->column('payment_method')->using(Order::$paymentMethodMap)
                 ->label([
                     '1' => 'blue',
                     '2' => 'green',
+                ]);
+            $grid->column('type')->using(Order::$typeMap)
+                ->label([
+                    '1' => 'default',
+                    '2' => 'orange',
+                    '3' => 'red'
                 ]);
             $grid->column('refund_status')->using(Order::$refundStatusMap)
                 ->label([
@@ -43,7 +52,6 @@ class OrdersController extends AdminController
                     '3' => 'green',
                     '4' => 'red',
                 ]);
-            $grid->column('reviewed')->bool();
             $grid->column('ship_status')->using(Order::$shipStatusMap)
                 ->label([
                     '0' => 'yellow',
@@ -108,20 +116,20 @@ class OrdersController extends AdminController
         return redirect()->back();
     }
 
-    public function handleRefund(Order $order, HandleRefundRequest $request)
+    public function handleRefund(Order $order, HandleRefundRequest $request, OrderService $orderService)
     {
         if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
             throw new InvalidRequestException('订单状态不正确');
         }
 
-        if ($agree = $request->input('agree')) {
+        if ($request->input('agree')) {
             $extra = $order->extra ?: [];
             unset($extra['refund_disagree_reason']);
             $order->update([
                 'extra' => $extra,
             ]);
 
-            $this->_refundOrder($order);
+            $orderService->refundOrder($order);
         } else {
             $extra = $order->extra ?: [];
             $extra['refund_disagree_reason'] = $request->input('reason');

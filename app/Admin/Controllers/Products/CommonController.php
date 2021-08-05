@@ -34,7 +34,7 @@ abstract class CommonController extends AdminController
 
     protected function form()
     {
-        return Form::make(Product::with('skus'), function (Form $form) {
+        return Form::make(Product::with('skus', 'crowdfunding'), function (Form $form) {
             $form->hidden('type')->value($this->getProductType());
 
             $form->text('title')->rules('required|string');

@@ -22,6 +22,7 @@ return [
         'total_amount' => '总额',
         'user_id' => 'user_id',
         'username' => '买家',
+        'type' => '类型',
     ],
     'options' => [
     ],
