@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,6 +78,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // 微信支付
     Route::get('payment/{order}/wechat', 'Pay\PaymentController@payByWechat')->name('payment.wechat');
+
+    // 分期付款
+    Route::post('payment/{order}/installment', 'Pay\PaymentController@payByInstallment')->name('payment.installment');
 });
 
 // 商品详情

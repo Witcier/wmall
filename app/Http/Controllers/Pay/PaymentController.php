@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Pay;
 use App\Events\OrderPaid;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
+use App\Models\Installment\Installment;
 use App\Models\Order\Order;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PaymentController extends Controller
 {
@@ -118,6 +120,70 @@ class PaymentController extends Controller
         $this->afterPaid($order);
 
         return app('wechat_pay')->success();
+    }
+
+    public function payByInstallment(Order $order, Request $request)
+    {
+        $this->authorize('own', $order);
+
+        if ($order->paid || $order->closed) {
+            throw new InvalidRequestException('订单状态不正确');
+        }
+
+        if ($order->total_amount < config('installment.min_installment_amount')) {
+            throw new InvalidRequestException('订单少于' . config('installment.min_installment_amount') . '不能分期付款');
+        }
+
+        $this->validate($request, [
+            'count' => [
+                'required',
+                Rule::in(array_keys(config('installment.installment_fee_rate'))),
+            ],
+        ]);
+
+        $count = $request->input('count');
+        $user = $request->user();
+
+        $installment= \DB::transaction(function () use ($order, $count, $user){
+            Installment::query()
+            ->where('order_id', $order->id)
+            ->where('status', Installment::STATUS_PENDING)
+            ->delete();
+
+            $installment = new Installment([
+                'total_amount' => $order->total_amount,
+                'count' => $count,
+                'fee_rate' => config('installment.installment_fee_rate')[$count],
+                'fine_rate' => config('installment.installment_fine_rate'),
+            ]);
+
+            $installment->user()->associate($user);
+            $installment->order()->associate($order);
+            $installment->save();
+
+            $dueAt = Installment::getFirstDueAt();
+
+            $base = big_number($order->total_amount)->divide($count)->getValue();
+            $fee = big_number($base)->multiply($installment->fee_rate)->divide(100)->getValue();
+
+            for ($i = 0; $i < $count; $i++) { 
+                // 最后一期
+                if ($i === $count - 1) {
+                    $base = big_number($order->total_amount)->subtract(big_number($base)->multiply($count - 1));
+                }
+
+                $installment->items()->create([
+                    'sequence' => $i,
+                    'base' => $base,
+                    'fee' => $fee,
+                    'due_at' => $dueAt,
+                ]);
+
+                $dueAt = $dueAt->copy()->addMonth();
+            }
+
+            return $installment;
+        });
     }
 
     protected function afterPaid(Order $order)

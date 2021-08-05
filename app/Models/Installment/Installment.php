@@ -4,6 +4,7 @@ namespace App\Models\Installment;
 
 use App\Models\Order\Order;
 use App\Models\User\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -69,5 +70,10 @@ class Installment extends Model
         \Log::warning("find installment no failed");
 
         return false;
+    }
+
+    public static function getFirstDueAt()
+    {
+        return Carbon::create(null, null, 9, 23, 59, 59)->copy()->addMonth();
     }
 }

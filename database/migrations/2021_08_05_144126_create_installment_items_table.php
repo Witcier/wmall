@@ -22,7 +22,7 @@ class CreateInstallmentItemsTable extends Migration
             $table->decimal('fee');
             $table->decimal('fine')->nullable();
             $table->dateTime('due_at');
-            $table->boolean('paid');
+            $table->boolean('paid')->default(false);
             $table->dateTime('paid_at')->nullable();
             $table->unsignedSmallInteger('payment_method')->nullable();
             $table->string('payment_no')->nullable();

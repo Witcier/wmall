@@ -10,6 +10,8 @@ class Item extends Model
 {
     use HasFactory;
 
+    protected $table = 'installment_items';
+
     const REFUND_STATUS_PENDING = 1;
     const REFUND_STATUS_PROCESSING = 2;
     const REFUND_STATUS_SUCCESS = 3;
