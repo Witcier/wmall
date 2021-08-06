@@ -83,27 +83,75 @@ class InstallmentsController extends Controller
             return app('alipay')->success();
         }
 
-        list($no, $sequence) = explode('_', $data->out_trade_no);
+        if ($this->paid($data->out_trade_no, Order::PAYMENT_METHOD_ALIPAY, $data->trade_no  )) {
+            return app('alipay')->success();
+        }
+
+        return 'fail';
+    }
+
+    public function payByWechat(Installment $installment)
+    {
+        if ($installment->order->closed) {
+            throw new InvalidRequestException('订单已关闭');
+        }
+
+        if ($installment->status === Installment::STATUS_FINISHED) {
+            throw new InvalidRequestException('分期付款订单已结清');
+        }
+
+        if (!$nextItem = $installment->items()->where('paid', false)->orderBy('sequence')->first()) {
+            throw new InvalidRequestException('分期付款订单已结清');
+        }
+
+        $wechatOrder = app('wechat_pay')->scan([
+            'out_trade'  => $installment->no . '_' . $nextItem->sequence,
+            'total_free' => $nextItem->total * 100,
+            'body'       => '支付 Shop 的分期订单：' . $installment->no,
+            'notify_url' => ngrok_url('installments.wechat.notify')
+        ]);
+
+        $qrCode = new QrCode($wechatOrder->code_url);
+
+        return response($wechatOrder->writeString(), 200, [
+            'Content-Type' => $qrCode->getContentType(),
+        ]);
+    }
+
+    public function wechatNotify()
+    {
+        $data = app('wechat_pay')->verify();
+
+        if ($this->paid($data->out_trade_no, Order::PAYMENT_METHOD_WECHAT, $data->transaction_id)) {
+            return app('wechat_pay')->success();
+        }
+
+        return 'fail';
+    }
+
+    protected function paid($outTradeNo, $paymentMethod, $paymentNo)
+    {
+        list($no, $sequence) = explode('_', $outTradeNo);
         $installment = Installment::where('no', $no)->first();
 
         if (!$installment) {
-            return 'fail';
+            return false;
         }
 
         if (!$item = $installment->items()->where('sequence', $sequence)->first()) {
-            return 'fail';
+            return false;
         }
 
         if ($item->paid) {
             return app('alipay')->success();
         }
 
-        \DB::transaction(function () use ($data, $no, $installment, $item) {
+        \DB::transaction(function () use ($paymentNo, $paymentMethod, $no, $installment, $item) {
             $item->update([
                 'paid' => true,
                 'paid_at' => Carbon::now(),
-                'payment_method' => Order::PAYMENT_METHOD_ALIPAY,
-                'payment_no' => $data->trade_no,
+                'payment_method' => $paymentMethod,
+                'payment_no' => $paymentNo,
             ]);
 
             if ($item->sequence === 0) {
@@ -127,7 +175,7 @@ class InstallmentsController extends Controller
                 ]);
             }
         });
-        
-        return app('alipay')->success();
+
+        return true;
     }
 }
