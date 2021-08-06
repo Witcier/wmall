@@ -28,6 +28,7 @@ class Order extends Model
     // 支付方式
     const PAYMENT_METHOD_ALIPAY = 1;
     const PAYMENT_METHOD_WECHAT = 2;
+    const PAYMENT_METHOD_INSTALLMENT = 3;
 
     const TYPE_NORMAL = 1;
     const TYPE_CROWDFUNDING = 2;
@@ -50,6 +51,7 @@ class Order extends Model
     public static $paymentMethodMap = [
         self::PAYMENT_METHOD_ALIPAY => '支付宝支付',
         self::PAYMENT_METHOD_WECHAT => '微信支付',
+        self::PAYMENT_METHOD_INSTALLMENT => '分期付款',
     ];
 
     public static $typeMap = [

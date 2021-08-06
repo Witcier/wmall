@@ -37,6 +37,7 @@ class OrdersController extends AdminController
                 ->label([
                     '1' => 'blue',
                     '2' => 'green',
+                    '3' => 'yellow',
                 ]);
             $grid->column('type')->using(Order::$typeMap)
                 ->label([

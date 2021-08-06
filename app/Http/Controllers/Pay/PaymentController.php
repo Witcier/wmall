@@ -47,7 +47,6 @@ class PaymentController extends Controller
     public function alipayNotify()
     {
         $data = app('alipay')->verify();
-        \Log::debug("Alipay Notify", $data->all());
 
         if (!in_array($data->trade_status, ['TRADE_SUCCESS', 'TRADE_FINISHED'])) {
             return app('alipay')->success();
@@ -184,6 +183,8 @@ class PaymentController extends Controller
 
             return $installment;
         });
+
+        return $installment;
     }
 
     protected function afterPaid(Order $order)
