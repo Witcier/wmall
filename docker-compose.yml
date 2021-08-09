@@ -57,6 +57,25 @@ services:
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
         networks:
             - shop
+    es:
+        build:
+            context: ./docker/es
+            dockerfile: Dockerfile
+        image: es
+        ports:
+            - 9200:9200
+            - 9300:9300
+        environment:
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - "discovery.type=single-node"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+        - shopelastsearch:/usr/share/elasticsearch/data
+        networks:
+        - shop
 networks:
     shop:
         driver: bridge
@@ -64,4 +83,6 @@ volumes:
     shopmysql:
         driver: local
     shopredis:
+        driver: local
+    shopelastsearch:
         driver: local
