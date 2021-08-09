@@ -32,7 +32,7 @@ class CloseOrder implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->order->paid) {
+        if ($this->order->paid || $this->order->type === Order::PAYMENT_METHOD_INSTALLMENT) {
             return;
         }
 

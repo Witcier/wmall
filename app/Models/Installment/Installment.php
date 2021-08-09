@@ -76,4 +76,21 @@ class Installment extends Model
     {
         return Carbon::create(null, null, 9, 23, 59, 59)->copy()->addMonth();
     }
+
+    public function refreshRefundStatus()
+    {
+        $allSuccess = true;
+        foreach ($this->items as $item) {
+            if ($item->paid && $item->refund_status !== Item::REFUND_STATUS_SUCCESS) {
+                $allSuccess = false;
+                break;
+            }
+        }
+        
+        if ($allSuccess) {
+            $this->order->update([
+                'refund_status' => Order::REFUND_STATUS_SUCCESS,
+            ]);
+        }
+    }
 }

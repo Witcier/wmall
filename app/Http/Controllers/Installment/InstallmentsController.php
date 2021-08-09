@@ -6,6 +6,7 @@ use App\Events\OrderPaid;
 use App\Exceptions\InvalidRequestException;
 use App\Http\Controllers\Controller;
 use App\Models\Installment\Installment;
+use App\Models\Installment\Item;
 use App\Models\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -177,5 +178,41 @@ class InstallmentsController extends Controller
         });
 
         return true;
+    }
+
+    public function wechatRefundNotify()
+    {
+        $failXml = '<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[FAIL]]></return_msg></xml>';
+
+        $data = app('wechat_pay')->verify(null, true);
+
+        list($no, $sequence) = explode('_', $data['out_trade_no']);
+
+        $item = Item::query()
+            ->whereHas('installment', function ($query) use ($no) {
+                $query->whereHas('order', function ($query) use ($no) {
+                    $query->where('refund', $no);
+                });
+            })
+            ->where('sequence', $sequence)
+            ->first();
+
+        if (!$item) {
+            return $failXml;
+        }
+
+        if ($data['refund_status'] === 'SUCCESS') {
+            $item->update([
+                'refund_status' => Item::REFUND_STATUS_SUCCESS,
+            ]);
+
+            $item->installment->refreshRefundStatus();
+        } else {
+            $item->update([
+                'refund_status' => Item::REFUND_STATUS_FAILED,
+            ]);
+        }
+
+        return app('wechat_pay')->success();
     }
 }

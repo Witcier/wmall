@@ -7,6 +7,7 @@ use App\Models\User\Address;
 use Auth;
 use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
+use App\Jobs\RefundInstallmentOrder;
 use App\Models\Coupon\Code;
 use App\Models\Order\Order;
 use App\Models\Product\Sku;
@@ -178,6 +179,17 @@ class OrderService
                     'refund_no' => $refundNo,
                     'refund_status' => Order::REFUND_STATUS_PROCESSING,
                 ]);
+                break;
+            
+            case '3':
+                $refundNo = Order::findAvailableRefundNo();
+
+                $order->update([
+                    'refund_no' => $refundNo,
+                    'refund_status' => Order::REFUND_STATUS_PROCESSING,
+                ]);
+
+                RefundInstallmentOrder::dispatch($order);
                 break;
             default:
                 throw new InternalException('未知订单支付方式：'.$order->payment_method);
