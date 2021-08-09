@@ -34,7 +34,7 @@ abstract class CommonController extends AdminController
 
     protected function form()
     {
-        return Form::make(Product::with('skus', 'crowdfunding'), function (Form $form) {
+        return Form::make(Product::with('skus', 'crowdfunding', 'properties'), function (Form $form) {
             $form->hidden('type')->value($this->getProductType());
 
             $form->text('title')->rules('required|string');
@@ -52,6 +52,11 @@ abstract class CommonController extends AdminController
                 $form->text('description')->rules('required');
                 $form->text('price')->rules('required|numeric|min:0.01');
                 $form->text('stock')->rules('required|numeric|min:0');
+            });
+
+            $form->hasMany('properties', function (Form\NestedForm $form) {
+                $form->text('name')->rules('required');
+                $form->text('value')->rules('required');
             });
 
             // 定义事件回调，当模型即将保存时会触发这个回调

@@ -19,6 +19,9 @@ return [
         'category' => [
             'name' => '分类',
         ],
+        'properties' => '商品属性',
+        'name' => '属性名',
+        'value' => '属性值',
     ],
     'options' => [
     ],
