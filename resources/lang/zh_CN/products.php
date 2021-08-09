@@ -6,6 +6,7 @@ return [
     ],
     'fields' => [
         'title' => '标题',
+        'long_title' => '长标题',
         'description' => '描述',
         'image' => '主图',
         'on_sale' => '是否上架',

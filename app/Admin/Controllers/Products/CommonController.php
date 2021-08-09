@@ -38,10 +38,11 @@ abstract class CommonController extends AdminController
             $form->hidden('type')->value($this->getProductType());
 
             $form->text('title')->rules('required|string');
+            $form->text('long_title')->rules('required|string');
             $form->select('product_category_id')
                 ->options(Category::selectOptions())
                 ->rules('required');
-            $form->textarea('description')->rules('required');
+            $form->editor('description')->rules('required');
             $form->image('image')->rules('required|image')->uniqueName()->autoUpload();
             $form->radio('on_sale')->options(['1' => '是', '0' => '否'])->default(0);
 
