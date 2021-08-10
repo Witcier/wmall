@@ -94,7 +94,7 @@ class Migrate extends Command
             'body' => $indexClass::getSettings(),
         ]);
 
-        $this->es->indices()->putMappings([
+        $this->es->indices()->putMapping([
             'index' => $aliasName,
             'body' => [
                 'properties' => $indexClass::getProperties(),

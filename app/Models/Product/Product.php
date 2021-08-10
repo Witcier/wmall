@@ -70,9 +70,9 @@ class Product extends Model
     public function toESArray()
     {
         $arr = Arr::only($this->toArray(), [
-            'id', 'type', 'title', 'category_id', 'long_title', 'on_sale', 'rating', 'sold_count', 'review_count', 'price',
+            'id', 'type', 'title', 'long_title', 'on_sale', 'rating', 'sold_count', 'review_count', 'price',
         ]);
-
+        $arr['category_id'] = $this->product_category_id;
         $arr['category'] = $this->category ? explode(' - ', $this->category->full_name) : '';
         $arr['category_path'] = $this->category ? $this->category->path : '';
         $arr['description'] = strip_tags($this->description);

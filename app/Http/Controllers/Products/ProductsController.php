@@ -9,49 +9,103 @@ use App\Models\Product\Category;
 use App\Models\Product\Product;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductsController extends Controller
 {
     public function index(Request $request, CategoryService $categoryService)
     {
-        $builder = Product::query()->where('on_sale', true);
+        $page = $request->input('page', 1);
+        $perPage = 16;
 
-        // 是否有关键字
-        if ($search = $request->input('search', '')) {
-            $like = '%' . $search . '%';
-
-            $builder->where(function ($query) use ($like) {
-                $query->where('title', 'like', $like)
-                    ->orWhere('description', 'like', $like)
-                    ->orWhereHas('skus', function ($query) use ($like) {
-                        $query->where('title', 'like', $like)
-                            ->orWhere('description', 'like', $like);
-                    });
-            });
-        }
+        $params = [
+            'index' => 'products',
+            'body' => [
+                'from' => ($page - 1) * $perPage,
+                'size' => $perPage,
+                'query' => [
+                    'bool' => [
+                        'filter' => [
+                            [
+                                'term' => [
+                                    'on_sale' => true,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         // 商品排列顺序
         if ($order = $request->input('order', '')) {
             // 判断是否以 asc 或者 desc 结尾
             if (preg_match('/^(.+)_(asc|desc)$/', $order, $m)) {
                 if (in_array($m[1], ['price', 'sold_count', 'rating'])) {
-                    $builder->orderBy($m[1], $m[2]);
+                    $params['body']['sort'] = [
+                        $m[1] => $m[2],
+                    ];
                 }
             }
         }
 
+        // 商品分类
         if ($request->input('product_category_id') && $category = Category::find($request->input('product_category_id'))) {
             if ($category->is_directory || $category->hasChildren()) {
-                $builder->whereHas('category', function ($query) use ($category) {
-                    $query->where('path', 'like', $category->path . $category->id . '-%');
-                });
+                $params['body']['query']['bool']['filter'][] = [
+                    'prefix' => [
+                        'category_path' => $category->path . $category->id . '-',
+                    ],
+                ];
             } else {
-                $builder->where('product_category_id', $category->id);
+                $params['body']['query']['bool']['filter'][] = [
+                    'term' => [
+                        'category_id' => $category->id,
+                    ],
+                ];
             }
         }
 
+        // 关键词
+        if ($search = $request->input('search', '')) {
+            $keywords = array_filter(explode(' ', $search));
+
+            $params['body']['query']['bool']['must'] =[];
+
+            foreach ($keywords as $keyword) {
+                $params['body']['query']['bool']['must'][] = [
+                    'multi_match' => [
+                        'query' => $keyword,
+                        'fields' => [
+                            'title^3',
+                            'long_title^2',
+                            'category^2',
+                            'description',
+                            'skus_title',
+                            'skus_description',
+                            'properties_value',
+                        ],
+                    ],
+                ];
+            }
+        }
+
+
+        $result = app('es')->search($params);
+
+        $productIds = collect($result['hits']['hits'])->pluck('_id')->all();
+
+        $products = Product::query()
+            ->whereIn('id', $productIds)
+            ->orderByRaw(sprintf("FIND_IN_SET(id, '%s')", join(',', $productIds)))
+            ->get();
+
+        $pager = new LengthAwarePaginator($products, $result['hits']['total']['value'], $perPage, $page, [
+            'path' => route('products.index', false),
+        ]);
+
         return view('products.index', [
-            'products' => $builder->paginate(16),
+            'products' => $pager,
             'filters' => [
                 'order' => $order,
                 'search' => $search,
