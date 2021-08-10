@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Products;
 
+use App\Jobs\SyncOneProductToES;
 use App\Models\Product\Category;
 use App\Models\Product\Product;
 use Dcat\Admin\Form;
@@ -63,6 +64,12 @@ abstract class CommonController extends AdminController
             // 定义事件回调，当模型即将保存时会触发这个回调
             $form->saving(function (Form $form) {
                 $form->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME, 0)->min('price') ?: 0;
+            });
+
+            $form->saved(function (Form $form) {
+                $product = $form->model();
+
+                SyncOneProductToES::dispatch($product);
             });
 
             // 禁用工具

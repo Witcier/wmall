@@ -74,6 +74,7 @@ services:
                 hard: -1
         volumes:
         - shopelastsearch:/usr/share/elasticsearch/data
+        - ./docker/es/analysis/synonyms.txt:/usr/share/elasticsearch/config/analysis/synonyms.txt
         networks:
         - shop
 networks:
