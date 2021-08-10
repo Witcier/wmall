@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order\Item;
 use App\Models\Product\Category;
 use App\Models\Product\Product;
+use App\SearchBuilders\ProductSearchBuilder;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,101 +19,23 @@ class ProductsController extends Controller
         $page = $request->input('page', 1);
         $perPage = 16;
 
-        $params = [
-            'index' => 'products',
-            'body' => [
-                'from' => ($page - 1) * $perPage,
-                'size' => $perPage,
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'on_sale' => true,
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        // 商品排列顺序
-        if ($order = $request->input('order', '')) {
-            // 判断是否以 asc 或者 desc 结尾
-            if (preg_match('/^(.+)_(asc|desc)$/', $order, $m)) {
-                if (in_array($m[1], ['price', 'sold_count', 'rating'])) {
-                    $params['body']['sort'] = [
-                        $m[1] => $m[2],
-                    ];
-                }
-            }
-        }
+        $builder = (new ProductSearchBuilder())->onSale()->paginate($perPage, $page);
 
         // 商品分类
         if ($request->input('product_category_id') && $category = Category::find($request->input('product_category_id'))) {
-            if ($category->is_directory || $category->hasChildren()) {
-                $params['body']['query']['bool']['filter'][] = [
-                    'prefix' => [
-                        'category_path' => $category->path . $category->id . '-',
-                    ],
-                ];
-            } else {
-                $params['body']['query']['bool']['filter'][] = [
-                    'term' => [
-                        'category_id' => $category->id,
-                    ],
-                ];
-            }
+            $builder->category($category);
         }
 
         // 关键词
         if ($search = $request->input('search', '')) {
             $keywords = array_filter(explode(' ', $search));
 
-            $params['body']['query']['bool']['must'] =[];
-
-            foreach ($keywords as $keyword) {
-                $params['body']['query']['bool']['must'][] = [
-                    'multi_match' => [
-                        'query' => $keyword,
-                        'fields' => [
-                            'title^3',
-                            'long_title^2',
-                            'category^2',
-                            'description',
-                            'skus_title',
-                            'skus_description',
-                            'properties_value',
-                        ],
-                    ],
-                ];
-            }
+            $builder->keywords($keywords);
         }
 
         // 分面搜索
         if ($search || isset($category)) {
-            $params['body']['aggs'] = [
-                'properties' => [
-                    'nested' => [
-                        'path' => 'properties',
-                    ],
-                    'aggs' => [
-                        'properties' => [
-                            'terms' => [
-                                'field' => 'properties.name',
-                            ],
-                            'aggs' => [
-                                'value' => [
-                                    'terms' => [
-                                        'field' => 'properties.value',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
+            $builder->aggregateProperties();
         }
 
         $propertyFilters = [];
@@ -124,27 +47,21 @@ class ProductsController extends Controller
 
                 $propertyFilters[$name] = $value;
 
-                $params['body']['query']['bool']['filter'][] = [
-                    'nested' => [
-                        'path' => 'properties',
-                        'query' => [
-                            [
-                                'term' => [
-                                    'properties.name' => $name,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'properties.value' => $value,
-                                ],
-                            ],
-                        ],
-                    ],
-                ];
+                $builder->propertyFilter($name, $value);
             }
         }
 
-        $result = app('es')->search($params);
+        // 商品排列顺序
+        if ($order = $request->input('order', '')) {
+            // 判断是否以 asc 或者 desc 结尾
+            if (preg_match('/^(.+)_(asc|desc)$/', $order, $m)) {
+                if (in_array($m[1], ['price', 'sold_count', 'rating'])) {
+                    $builder->orderBy($m[1], $m[2]);
+                }
+            }
+        }
+
+        $result = app('es')->search($builder->getParams());
 
         $productIds = collect($result['hits']['hits'])->pluck('_id')->all();
 
