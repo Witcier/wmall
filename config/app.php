@@ -123,7 +123,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'order_ttl' => env('ORDERTTL', 1800),
+    'order_ttl' => env('ORDER_TTL', 1800),
+
+    'seckill_order_ttl' => env('SECKILL_ORDER_TTL', 600),
 
     'ngrok_url' => env('NGROK_URL'),
 

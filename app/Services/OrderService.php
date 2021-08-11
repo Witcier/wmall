@@ -135,6 +135,48 @@ class OrderService
         return $order;
     }
 
+    public function seckill(Address $address, Sku $sku)
+    {
+        $user = Auth::user();
+
+        $order = \DB::transaction(function () use ($user, $address, $sku) {
+            $address->update([
+                'last_used_at' => Carbon::now(),
+            ]);
+
+            $addressData = [ // 将地址信息放入订单中
+                'address' => $address->full_address,
+                'zip' => $address->zip,
+                'contact_name' => $address->contact_name,
+                'contact_phone' => $address->contact_phone,
+            ];
+
+            $order = new Order([
+                'address' => $addressData,
+                'remark' => '',
+                'total_amount' => $sku->price,
+                'type' => Order::TYPE_SECKILL,
+            ]);
+
+            $order->user()->associate($user);
+            $order->save();
+
+            $item = $order->items()->make([
+                'amount' => 1,
+                'price' => $sku->price,
+            ]);
+            $item->product()->associate($sku->product_id);
+            $item->productSku()->associate($sku);
+            $item->save();
+
+            return $order;
+        });
+
+        CloseOrder::dispatch($order)->delay(config('app.seckill_order_ttl'));
+
+        return $order;
+    }
+
     public function refundOrder(Order $order)
     {
         switch ($order->payment_method) {

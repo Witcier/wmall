@@ -1,8 +1,8 @@
 <?php 
 return [
     'labels' => [
-        'Crowdfunding' => '众筹商品',
-        'crowdfunding' => '众筹商品',
+        'Seckills' => '秒杀商品',
+        'seckills' => '秒杀商品',
     ],
     'fields' => [
         'title' => '标题',
@@ -21,12 +21,9 @@ return [
         'category' => [
             'name' => '分类',
         ],
-        'crowdfunding' => [
-            'end_at' => '结束时间',
-            'status' => '众筹状态',
-            'target_amount' => '目标金额',
-            'total_amount' => '目前金额',
-            'user_count' => '众筹人数',
+        'seckill' => [
+            'start_at' => '秒杀开始',
+            'end_at'   => '秒杀结束',
         ],
         'properties' => '商品属性',
         'name' => '属性名',

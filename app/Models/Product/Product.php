@@ -13,12 +13,12 @@ class Product extends Model
 
     const TYPE_NORMAL = 1;
     const TYPE_CROWDFUNDING = 2;
-    const TYPE_SKILL = 3;
+    const TYPE_SECKILL = 3;
 
     public static $typeMap = [
         self::TYPE_NORMAL       => '普通商品',
         self::TYPE_CROWDFUNDING => '众筹商品',
-        self::TYPE_SKILL        => '秒杀商品',
+        self::TYPE_SECKILL      => '秒杀商品',
     ];
 
     protected $fillable = [
@@ -44,6 +44,11 @@ class Product extends Model
         return $this->hasOne(Crowdfunding::class);
     }
 
+    public function seckill()
+    {
+        return $this->hasOne(Seckill::class);
+    }
+    
     public function properties()
     {
         return $this->hasMany(Property::class);

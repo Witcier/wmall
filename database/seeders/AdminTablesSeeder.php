@@ -34,74 +34,74 @@ class AdminTablesSeeder extends Seeder
                 [
                     "id" => 2,
                     "parent_id" => 0,
-                    "order" => 8,
+                    "order" => 11,
                     "title" => "Admin",
                     "icon" => "feather icon-settings",
                     "uri" => "",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-14 12:00:07",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 3,
                     "parent_id" => 2,
-                    "order" => 9,
+                    "order" => 12,
                     "title" => "Users",
                     "icon" => "",
                     "uri" => "auth/users",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-14 12:00:07",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 4,
                     "parent_id" => 2,
-                    "order" => 10,
+                    "order" => 13,
                     "title" => "Roles",
                     "icon" => "",
                     "uri" => "auth/roles",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-14 12:00:07",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 5,
                     "parent_id" => 2,
-                    "order" => 11,
+                    "order" => 14,
                     "title" => "Permission",
                     "icon" => "",
                     "uri" => "auth/permissions",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-14 12:00:07",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 6,
                     "parent_id" => 2,
-                    "order" => 12,
+                    "order" => 15,
                     "title" => "Menu",
                     "icon" => "",
                     "uri" => "auth/menu",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-14 12:00:07",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 7,
                     "parent_id" => 2,
-                    "order" => 13,
+                    "order" => 16,
                     "title" => "Extensions",
                     "icon" => "",
                     "uri" => "auth/extensions",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-14 12:00:07",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 8,
@@ -142,38 +142,74 @@ class AdminTablesSeeder extends Seeder
                 [
                     "id" => 11,
                     "parent_id" => 0,
-                    "order" => 7,
+                    "order" => 10,
                     "title" => "Dcat Plus",
                     "icon" => "feather icon-settings",
                     "uri" => "dcat-plus/site",
                     "extension" => "celaraze.dcat-extension-plus",
                     "show" => 1,
                     "created_at" => "2021-07-21 14:33:00",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 12,
                     "parent_id" => 0,
-                    "order" => 5,
+                    "order" => 8,
                     "title" => "订单管理",
                     "icon" => NULL,
                     "uri" => "orders",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-07-28 09:33:03",
-                    "updated_at" => "2021-07-28 09:33:28"
+                    "updated_at" => "2021-08-11 16:30:12"
                 ],
                 [
                     "id" => 13,
                     "parent_id" => 0,
-                    "order" => 6,
+                    "order" => 9,
                     "title" => "优惠卷管理",
                     "icon" => NULL,
                     "uri" => "coupons/codes",
                     "extension" => "",
                     "show" => 1,
                     "created_at" => "2021-08-03 14:15:36",
-                    "updated_at" => "2021-08-03 14:15:51"
+                    "updated_at" => "2021-08-11 16:30:12"
+                ],
+                [
+                    "id" => 14,
+                    "parent_id" => 9,
+                    "order" => 7,
+                    "title" => "分类",
+                    "icon" => NULL,
+                    "uri" => "product/categories",
+                    "extension" => "",
+                    "show" => 1,
+                    "created_at" => "2021-08-04 10:55:45",
+                    "updated_at" => "2021-08-11 16:30:12"
+                ],
+                [
+                    "id" => 15,
+                    "parent_id" => 9,
+                    "order" => 5,
+                    "title" => "众筹商品",
+                    "icon" => NULL,
+                    "uri" => "product/crowdfunding",
+                    "extension" => "",
+                    "show" => 1,
+                    "created_at" => "2021-08-04 16:05:38",
+                    "updated_at" => "2021-08-04 16:05:55"
+                ],
+                [
+                    "id" => 16,
+                    "parent_id" => 9,
+                    "order" => 6,
+                    "title" => "秒杀商品",
+                    "icon" => NULL,
+                    "uri" => "product/seckills",
+                    "extension" => "",
+                    "show" => 1,
+                    "created_at" => "2021-08-11 16:30:03",
+                    "updated_at" => "2021-08-11 16:30:11"
                 ]
             ]
         );

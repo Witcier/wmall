@@ -10,6 +10,7 @@ use App\Http\Requests\Order\ApplyRefundRequest;
 use App\Http\Requests\Order\CrowdfundingOrderRequest;
 use App\Http\Requests\Order\OrderRequest;
 use App\Http\Requests\Order\ReviewedRequest;
+use App\Http\Requests\Order\SeckillOrderRequest;
 use App\Jobs\CloseOrder;
 use App\Models\Coupon\Code;
 use App\Models\Order\Order;
@@ -58,6 +59,14 @@ class OrdersController extends Controller
         $amount = $request->input('amount');
 
         return $orderService->crowdfunding($address, $sku, $amount);
+    }
+
+    public function seckill(SeckillOrderRequest $request, OrderService $orderService)
+    {
+        $sku = Sku::find($request->input('sku_id'));
+        $address = Address::find($request->input('address_id'));
+
+        return $orderService->seckill($address, $sku);
     }
 
     public function show(Order $order, Request $request)

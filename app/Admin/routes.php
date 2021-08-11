@@ -24,6 +24,8 @@ Route::group([
             $router->resource('products', 'ProductsController');
             // 众筹商品
             $router->resource('product/crowdfunding', 'CrowdfundingController');
+            // 秒杀商品
+            $router->resource('product/seckills', 'SeckillsController');
             // 分类管理
             $router->resource('product/categories', 'CategoriesController');
         });

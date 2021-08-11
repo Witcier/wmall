@@ -65,6 +65,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // 众筹商品下单
     Route::post('order/crowdfunding', 'Order\OrdersController@crowdfunding')->name('order.crowdfunding.store');
 
+    // 秒杀商品下单
+    Route::post('order/seckills', 'Order\OrdersController@seckill')->name('order.seckill.store');
+
     // 检查优惠卷优惠码
     Route::get('coupon/codes/{code}', 'Coupon\CodesController@show')->name('coupon.codes.show');
 
