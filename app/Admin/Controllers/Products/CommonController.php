@@ -67,7 +67,7 @@ abstract class CommonController extends AdminController
             });
 
             $form->saved(function (Form $form) {
-                $product = $form->model();
+                $product = $form->isCreating() ? Product::find($form->getKey()) : $form->model();
 
                 SyncOneProductToES::dispatch($product);
             });

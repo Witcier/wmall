@@ -67,6 +67,21 @@ class Product extends Model
             });
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($model) {
+            $params = [
+                'index' => 'products',
+                'type'  => '_doc', 
+                'id'    => $model->id,
+            ];
+
+            app('es')->delete($params);
+        });
+    }
+
     public function toESArray()
     {
         $arr = Arr::only($this->toArray(), [
