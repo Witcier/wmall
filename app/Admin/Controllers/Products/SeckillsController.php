@@ -3,6 +3,8 @@
 namespace App\Admin\Controllers\Products;
 
 use App\Models\Product\Product;
+use App\Models\Product\Sku;
+use Illuminate\Support\Facades\Redis;
 
 class SeckillsController extends CommonController
 {
@@ -29,5 +31,19 @@ class SeckillsController extends CommonController
     {
         $form->datetime('seckill.start_at')->rules('required|date');
         $form->datetime('seckill.end_at')->rules('required|date');
+
+        $form->saved(function (\Dcat\Admin\Form $form) {
+            $product = $form->isCreating() ? Product::find($form->getKey()) : $form->model();
+            $product->load(['seckill', 'skus']);
+            $diff = $product->seckill->end_at->getTimestamp() - time();
+
+            $product->skus->each(function (Sku $sku) use ($diff, $product) {
+                if ($product->on_sale && $diff > 0) {
+                    Redis::setex('seckill_sku_' . $sku->id, $diff, $sku->stock);
+                } else {
+                    Redis::del('seckill_sku_' . $sku->id);
+                }
+            });
+        });
     }
 }

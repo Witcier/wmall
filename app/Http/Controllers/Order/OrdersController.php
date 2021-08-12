@@ -64,9 +64,9 @@ class OrdersController extends Controller
     public function seckill(SeckillOrderRequest $request, OrderService $orderService)
     {
         $sku = Sku::find($request->input('sku_id'));
-        $address = Address::find($request->input('address_id'));
+        $addressData = $request->input('address');
 
-        return $orderService->seckill($address, $sku);
+        return $orderService->seckill($addressData, $sku);
     }
 
     public function show(Order $order, Request $request)

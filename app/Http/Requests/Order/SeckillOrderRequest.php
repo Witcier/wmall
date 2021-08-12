@@ -6,6 +6,7 @@ use App\Http\Requests\Request;
 use App\Models\Order\Order;
 use App\Models\Product\Product;
 use App\Models\Product\Sku;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\Rule;
 
 class SeckillOrderRequest extends Request
@@ -13,20 +14,27 @@ class SeckillOrderRequest extends Request
     public function rules()
     {
         return [
-            'address_id' => [
-                'required',
-                Rule::exists('user_addresses', 'id')->where('user_id', $this->user()->id),
-            ],
+            'address.province'      => 'required',
+            'address.city'          => 'required',
+            'address.district'      => 'required', 
+            'address.address'       => 'required', 
+            'address.zip'           => 'required', 
+            'address.contact_name'  => 'required', 
+            'address.contact_phone' => 'required',   
             'sku_id' => [
                 'required',
                 function ($attribute, $value, $fail) {
-                    if (!$sku = Sku::find($value)) {
+                    if (!$user = \Auth::user()) {
+                        throw new AuthenticationException('请先登录');
+                    }
+                    $stock = Redis::get('seckill_sku_' . $value);
+                    if (is_null($stock)) {
                         return $fail('商品不存在');
                     }
-                    if ($sku->product->type !== Product::TYPE_SECKILL) {
-                        return $fail('商品不支持秒杀');
+                    if ($stock < 1) {
+                        return $fail('商品已售完');
                     }
-                    if (!$sku->product->on_sale) {
+                    if (!$sku = Sku::find($value)) {
                         return $fail('商品不存在');
                     }
                     if ($sku->product->seckill->is_before_start) {
@@ -34,9 +42,6 @@ class SeckillOrderRequest extends Request
                     }
                     if ($sku->product->seckill->is_after_end) {
                         return $fail('商品秒杀已结束');
-                    }
-                    if ($sku->stock == 0) {
-                        return $fail('商品已售完');
                     }
                     
                     if ($order = Order::query()
